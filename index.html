@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zachary A Krivis - Personal Website</title>
+  <!-- AOS CSS for scroll animations -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+
+  <style>
+    /* Reset & Basic Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    /* The canvas for background animation */
+    canvas#bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    /* Overlay for resume content */
+    .overlay {
+      position: relative;
+      z-index: 1;
+      padding: 40px 20px;
+    }
+    .content {
+      max-width: 800px;
+      margin: auto;
+      padding-bottom: 60px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    header h1 {
+      font-size: 2.8em;
+      margin-bottom: 10px;
+    }
+    header p a {
+      color: #00aaff;
+      text-decoration: none;
+    }
+    section {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 40px;
+    }
+    section h2 {
+      border-bottom: 2px solid #00aaff;
+      padding-bottom: 5px;
+      margin-bottom: 15px;
+    }
+    section h3 {
+      margin-bottom: 8px;
+    }
+    section p em {
+      font-size: 0.9em;
+      color: #ccc;
+    }
+    section ul {
+      margin-left: 20px;
+      list-style: disc;
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas for animated background -->
+  <canvas id="bg"></canvas>
+
+  <!-- Resume Content Overlay -->
+  <div class="overlay">
+    <div class="content">
+      <!-- Header -->
+      <header data-aos="fade-down">
+        <h1>Zachary A Krivis</h1>
+        <p>
+          Solon, OH | 
+          <a href="mailto:zachkrivis@gmail.com">zachkrivis@gmail.com</a> | 
+          (440) 903-8003
+        </p>
+      </header>
+
+      <!-- Experience Section -->
+      <section id="experience" data-aos="fade-up">
+        <h2>Experience</h2>
+        <div class="experience-item">
+          <h3>Technology Assistant – Solon Senior Center</h3>
+          <p><em>June 2022 - Present, Solon, OH</em></p>
+          <ul>
+            <li>Provided hands-on technology support to over 50 senior citizens, achieving a 95% problem resolution rate.</li>
+            <li>Designed and facilitated engaging VR experiences using Oculus Quest 2 with 100% positive participant feedback.</li>
+            <li>Maintained a welcoming environment that increased senior engagement at the center.</li>
+            <li>Coordinated schedule updates and communicated important information with the activities coordinator.</li>
+            <li>Enhanced the well-being of seniors by offering attentive service and fostering a supportive atmosphere.</li>
+          </ul>
+        </div>
+        <div class="experience-item">
+          <h3>Basketball Scorekeeping – Solon Community Center</h3>
+          <p><em>January 2024 - February 2024, Solon, OH</em></p>
+          <ul>
+            <li>Managed scoreboard and game clock operations for over 20 minor league basketball games ensuring real-time accuracy.</li>
+            <li>Enhanced the viewer experience through precise timekeeping and effective communication during high-pressure scenarios.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Academic Achievements Section -->
+      <section id="academic" data-aos="fade-up" data-aos-delay="100">
+        <h2>Academic Achievements</h2>
+        <div class="achievement-item">
+          <h3>Ohio Academy State Science Fair &amp; Thermo Fisher Scientific Junior Innovators Challenge</h3>
+          <p><em>August 2022 - May 2023</em></p>
+          <ul>
+            <li>Developed and showcased an innovative project on 3D printing technology and additive manufacturing for civil engineering applications.</li>
+            <li>Delivered over six presentations to panels of professional STEM judges, receiving high praise for clarity and depth.</li>
+            <li>Achieved near-perfect scores (49/50 and 50/50), reflecting research excellence and presentation quality.</li>
+            <li>Earned the Dr. Lynn E. Elfner Young Scientist Award, Thermo Fisher Scientific Junior Innovators Award, and American Society Of Civil Engineers Third Place; contributed to winning the Harold C. Shaw Outstanding School Award.</li>
+            <li>Qualified/nominated for the Thermo Fisher Scientific Junior Innovators Challenge National Science Fair.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Education Section -->
+      <section id="education" data-aos="fade-up" data-aos-delay="200">
+        <h2>Education</h2>
+        <div class="education-item">
+          <h3>Solon High School, Class of 2027</h3>
+          <p><em>Solon, OH</em></p>
+          <ul>
+            <li>Cumulative GPA: 3.9850</li>
+            <li>Relevant Coursework: AP Computer Science A, Honors Pre Calculus</li>
+            <li>Extracurriculars: Junior varsity cross country and indoor/outdoor track (4 years), Concert Band (6 years), Marching Band (2 years), Student Council (2 years), Solon Education TV (4 years), Ski and Snowboard Club (2 years)</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Skills Section -->
+      <section id="skills" data-aos="fade-up" data-aos-delay="300">
+        <h2>Skills</h2>
+        <div class="skills-item">
+          <h3>Programming Languages</h3>
+          <ul>
+            <li><strong>Java:</strong> Developed programs including a cashier change calculator, an interactive virtual pet, and an efficient number guessing game.</li>
+            <li><strong>Python:</strong> Created applications such as an intuitive Jeopardy game and a comprehensive shipping price calculator.</li>
+          </ul>
+        </div>
+        <div class="skills-item">
+          <h3>Developer Tools</h3>
+          <ul>
+            <li>GitHub, Visual Studio Code, IntelliJ IDEA, PyCharm, Replit</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- AOS JS for scroll-triggered animations -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 800, // Animation duration in milliseconds
+      easing: 'ease-in-out'
+    });
+  </script>
+
+  <!-- Canvas Animation Script -->
+  <script>
+    // Setup the canvas and context
+    const canvas = document.getElementById('bg');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    /* Mountain layers configuration.
+       Each layer has a base (vertical position), amplitude, frequency,
+       horizontal speed, an offset for animation, and a fill color.
+    */
+    const mountains = [
+      { base: canvas.height * 0.3, amplitude: 50, frequency: 0.005, speed: 0.2, offset: 0, color: '#2c3e50' },
+      { base: canvas.height * 0.5, amplitude: 80, frequency: 0.003, speed: 0.3, offset: 0, color: '#34495e' },
+      { base: canvas.height * 0.7, amplitude: 100, frequency: 0.002, speed: 0.4, offset: 0, color: '#95a5a6' }
+    ];
+
+    // Particle system: simulate drifting snowflakes
+    const particles = [];
+    const particleCount = 150;
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2 + 1,
+        speed: Math.random() * 1 + 0.5,
+        drift: (Math.random() - 0.5) * 0.5
+      });
+    }
+
+    // Draw the mountain layers
+    function drawMountains() {
+      mountains.forEach(layer => {
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height);
+        for (let x = 0; x <= canvas.width; x += 10) {
+          // Use a sine wave to simulate mountain curves
+          const y = layer.base + layer.amplitude * Math.sin((x + layer.offset) * layer.frequency);
+          ctx.lineTo(x, y);
+        }
+        ctx.lineTo(canvas.width, canvas.height);
+        ctx.closePath();
+        ctx.fillStyle = layer.color;
+        ctx.fill();
+
+        // Update horizontal offset for animation
+        layer.offset += layer.speed;
+      });
+    }
+
+    // Draw and update particles (snowflakes)
+    function drawParticles() {
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      particles.forEach(particle => {
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Update particle position for falling effect
+        particle.y += particle.speed;
+        particle.x += particle.drift;
+
+        // Reset particle to top if it moves off the bottom
+        if (particle.y > canvas.height) {
+          particle.y = -particle.radius;
+          particle.x = Math.random() * canvas.width;
+        }
+        // Wrap horizontally
+        if (particle.x > canvas.width) {
+          particle.x = 0;
+        } else if (particle.x < 0) {
+          particle.x = canvas.width;
+        }
+      });
+    }
+
+    // Main animation loop
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawMountains();
+      drawParticles();
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Adjust canvas size and mountain base values on window resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      mountains[0].base = canvas.height * 0.3;
+      mountains[1].base = canvas.height * 0.5;
+      mountains[2].base = canvas.height * 0.7;
+    });
+  </script>
+</body>
+</html>
