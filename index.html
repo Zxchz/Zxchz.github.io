@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Zachary Krivis</title>
+  <style>
+    /* Deepseek-inspired color palette with centered, larger text */
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      font-family: Arial, sans-serif;
+      background: #080710; /* deep dark background */
+      color: #ffffff;
+      font-size: 18px;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    .section {
+      min-height: 100vh;
+      padding: 50px;
+      mix-blend-mode: difference;
+      opacity: 0;
+      background: rgba(8,7,16,0.8);
+      margin: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    /* Different starting transforms and delays for each section */
+    .section:nth-of-type(1) {
+      transform: translateY(50px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+    .section:nth-of-type(2) {
+      transform: translateX(-50px);
+      transition: opacity 1s ease 0.2s, transform 1s ease 0.2s;
+    }
+    .section:nth-of-type(3) {
+      transform: translateX(50px);
+      transition: opacity 1s ease 0.4s, transform 1s ease 0.4s;
+    }
+    .section:nth-of-type(4) {
+      transform: translateY(50px) scale(0.9);
+      transition: opacity 1s ease 0.6s, transform 1s ease 0.6s;
+    }
+    .section:nth-of-type(5) {
+      transform: rotate(10deg) translateY(50px);
+      transition: opacity 1s ease 0.8s, transform 1s ease 0.8s;
+    }
+    /* When visible, reset the transform to normal */
+    .section.visible {
+      opacity: 1;
+      transform: none;
+    }
+    h1, h2 {
+      color: #00f9ff; /* neon cyan accent */
+      text-align: center;
+    }
+    h1 {
+      font-size: 3em;
+    }
+    h2 {
+      font-size: 2.5em;
+    }
+    p, li, h3 {
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <section class="section">
+      <h1>Zachary A. Krivis</h1>
+      <p>Solon, OH • zachkrivis@gmail.com • (440) 903-8003</p>
+    </section>
+
+    <section class="section">
+      <h2>Experience</h2>
+      <h3>Technology Assistant - Solon Senior Center</h3>
+      <p>June 2022 - Present</p>
+      <ul>
+        <li>Provided tech support to 50+ seniors with 95% resolution rate</li>
+        <li>Designed VR experiences using Oculus Quest 2</li>
+      </ul>
+
+      <h3>Basketball Scorekeeping - Solon Community Center</h3>
+      <p>Jan 2024 - Feb 2024</p>
+      <ul>
+        <li>Managed scoreboard for 20+ games</li>
+        <li>Enhanced viewer experience through precise timing</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Academic Achievements</h2>
+      <h3>Ohio Academy State Science Fair</h3>
+      <ul>
+        <li>Developed 3D printing substrates project</li>
+        <li>Awarded multiple prestigious prizes</li>
+        <li>National Science Fair qualifier</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Education</h2>
+      <h3>Solon High School • Class of 2027</h3>
+      <p>3.985 GPA</p>
+      <ul>
+        <li>AP Computer Science A</li>
+        <li>JV Cross Country/Track</li>
+        <li>Concert/Marching Band</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Skills</h2>
+      <h3>Languages:</h3>
+      <ul>
+        <li>Java: Virtual pet, number guessing game</li>
+        <li>Python: Jeopardy game, shipping calculator</li>
+      </ul>
+      <h3>Tools:</h3>
+      <p>GitHub, VS Code, IntelliJ, PyCharm</p>
+    </section>
+  </div>
+
+  <!-- Three.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    /***** THREE.JS SCENE SETUP *****/
+    const scene = new THREE.Scene();
+    // Set up a perspective camera. (Default: looks down negative z.)
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 0, 0); // start at the origin
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Add lighting for our section objects
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(1, 1, 1);
+    scene.add(directionalLight);
+
+    /***** PARTICLE BACKGROUND *****/
+    const particleCount = 5000;
+    const particlesGeometry = new THREE.BufferGeometry();
+    const posArray = new Float32Array(particleCount * 3);
+
+    // Spread particles in a larger z-range for the scrolling scene.
+    for (let i = 0; i < particleCount; i++) {
+      posArray[i * 3] = (Math.random() - 0.5) * 10;
+      posArray[i * 3 + 1] = (Math.random() - 0.5) * 10;
+      posArray[i * 3 + 2] = (Math.random() - 0.5) * 50;
+    }
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+    const particleMaterial = new THREE.PointsMaterial({
+      size: 0.05,
+      color: 0x00f9ff
+    });
+    const particleMesh = new THREE.Points(particlesGeometry, particleMaterial);
+    scene.add(particleMesh);
+
+    /***** TERRAIN (Background Ground) *****/
+    const terrainGeometry = new THREE.PlaneGeometry(50, 50, 50, 50);
+    const terrainMaterial = new THREE.MeshBasicMaterial({
+      color: 0x222222,
+      wireframe: true,
+      opacity: 0.3,
+      transparent: true
+    });
+    const terrain = new THREE.Mesh(terrainGeometry, terrainMaterial);
+    terrain.rotation.x = -Math.PI / 2;
+    // Position it further back so it stays in the background.
+    terrain.position.set(0, -5, -25);
+    scene.add(terrain);
+
+    /***** 3D OBJECTS FOR EACH SECTION *****/
+    // These objects will be placed along -z and animate (rotate) continuously.
+    const sectionDistance = 10;
+    const sectionObjects = [];
+
+    // Section 1: A Cube
+    const cube = new THREE.Mesh(
+      new THREE.BoxGeometry(1, 1, 1),
+      new THREE.MeshStandardMaterial({ color: 0x00f9ff, roughness: 0.5, metalness: 0.1 })
+    );
+    cube.position.set(-2, 0, 0);
+    scene.add(cube);
+    sectionObjects.push(cube);
+
+    // Section 2: A Torus
+    const torus = new THREE.Mesh(
+      new THREE.TorusGeometry(0.7, 0.2, 16, 100),
+      new THREE.MeshStandardMaterial({ color: 0x00f9ff, roughness: 0.5, metalness: 0.1 })
+    );
+    torus.position.set(2, 1, -sectionDistance);
+    scene.add(torus);
+    sectionObjects.push(torus);
+
+    // Section 3: A Sphere
+    const sphere = new THREE.Mesh(
+      new THREE.SphereGeometry(0.7, 32, 32),
+      new THREE.MeshStandardMaterial({ color: 0x00f9ff, roughness: 0.5, metalness: 0.1 })
+    );
+    sphere.position.set(-2, -1, -sectionDistance * 2);
+    scene.add(sphere);
+    sectionObjects.push(sphere);
+
+    // Section 4: A Cone
+    const cone = new THREE.Mesh(
+      new THREE.ConeGeometry(0.7, 1.5, 32),
+      new THREE.MeshStandardMaterial({ color: 0x00f9ff, roughness: 0.5, metalness: 0.1 })
+    );
+    cone.position.set(2, -1, -sectionDistance * 3);
+    scene.add(cone);
+    sectionObjects.push(cone);
+
+    // Section 5: An Octahedron
+    const octahedron = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.7),
+      new THREE.MeshStandardMaterial({ color: 0x00f9ff, roughness: 0.5, metalness: 0.1 })
+    );
+    octahedron.position.set(0, 0, -sectionDistance * 4);
+    scene.add(octahedron);
+    sectionObjects.push(octahedron);
+
+    /***** SCROLL-TRIGGERED FADE-IN FOR DOM SECTIONS *****/
+    const sections = document.querySelectorAll('.section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.5 });
+    sections.forEach(section => observer.observe(section));
+
+    /***** ANIMATION LOOP *****/
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // --- Update camera based on scroll ---
+      // Calculate scroll percentage.
+      const totalScrollHeight = document.body.scrollHeight - window.innerHeight;
+      const scrollPercent = window.scrollY / totalScrollHeight;
+      // Move the camera along -z so that it passes through our section objects.
+      camera.position.z = -scrollPercent * (sectionDistance * (sectionObjects.length - 1));
+
+      // --- Rotate our section objects for a dynamic effect ---
+      sectionObjects.forEach(obj => {
+        obj.rotation.x += 0.01;
+        obj.rotation.y += 0.01;
+      });
+
+      // --- Optionally animate particles slightly ---
+      const positions = particleMesh.geometry.attributes.position.array;
+      for (let i = 0; i < positions.length; i += 3) {
+        positions[i] += (Math.random() - 0.5) * 0.001;
+        positions[i + 1] += (Math.random() - 0.5) * 0.001;
+      }
+      particleMesh.geometry.attributes.position.needsUpdate = true;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    /***** RESIZE HANDLER *****/
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
