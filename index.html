@@ -1,274 +1,281 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zachary A Krivis - Personal Website</title>
-  <!-- AOS CSS for scroll animations -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
-
+  <meta charset="UTF-8">
+  <title>Zachary Krivis</title>
   <style>
-    /* Reset & Basic Styles */
-    * {
+    /* Deepseek-inspired color palette with centered, larger text */
+    body {
       margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    html, body {
-      width: 100%;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: #fff;
       overflow-x: hidden;
+      font-family: Arial, sans-serif;
+      background: #080710; /* deep dark background */
+      color: #ffffff;
+      font-size: 18px;
     }
-    /* The canvas for background animation */
-    canvas#bg {
+    canvas {
       position: fixed;
       top: 0;
       left: 0;
       z-index: -1;
     }
-    /* Overlay for resume content */
-    .overlay {
-      position: relative;
-      z-index: 1;
-      padding: 40px 20px;
-    }
-    .content {
-      max-width: 800px;
-      margin: auto;
-      padding-bottom: 60px;
-    }
-    header {
+    .section {
+      min-height: 100vh;
+      padding: 50px;
+      mix-blend-mode: difference;
+      opacity: 0;
+      background: rgba(8,7,16,0.8);
+      margin: 20px;
+      border-radius: 10px;
       text-align: center;
-      margin-bottom: 40px;
     }
-    header h1 {
-      font-size: 2.8em;
-      margin-bottom: 10px;
+    /* Different starting transforms and delays for each section */
+    .section:nth-of-type(1) {
+      transform: translateY(50px);
+      transition: opacity 1s ease, transform 1s ease;
     }
-    header p a {
-      color: #00aaff;
-      text-decoration: none;
+    .section:nth-of-type(2) {
+      transform: translateX(-50px);
+      transition: opacity 1s ease 0.2s, transform 1s ease 0.2s;
     }
-    section {
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 40px;
+    .section:nth-of-type(3) {
+      transform: translateX(50px);
+      transition: opacity 1s ease 0.4s, transform 1s ease 0.4s;
     }
-    section h2 {
-      border-bottom: 2px solid #00aaff;
-      padding-bottom: 5px;
-      margin-bottom: 15px;
+    .section:nth-of-type(4) {
+      transform: translateY(50px) scale(0.9);
+      transition: opacity 1s ease 0.6s, transform 1s ease 0.6s;
     }
-    section h3 {
-      margin-bottom: 8px;
+    .section:nth-of-type(5) {
+      transform: rotate(10deg) translateY(50px);
+      transition: opacity 1s ease 0.8s, transform 1s ease 0.8s;
     }
-    section p em {
-      font-size: 0.9em;
-      color: #ccc;
+    /* When visible, reset the transform to normal */
+    .section.visible {
+      opacity: 1;
+      transform: none;
     }
-    section ul {
-      margin-left: 20px;
-      list-style: disc;
+    h1, h2 {
+      color: #00f9ff; /* neon cyan accent */
+      text-align: center;
+    }
+    h1 {
+      font-size: 3em;
+    }
+    h2 {
+      font-size: 2.5em;
+    }
+    p, li, h3 {
+      font-size: 1.2em;
     }
   </style>
 </head>
 <body>
-  <!-- Canvas for animated background -->
-  <canvas id="bg"></canvas>
+  <div id="container">
+    <section class="section">
+      <h1>Zachary A. Krivis</h1>
+      <p>Solon, OH • zachkrivis@gmail.com • (440) 903-8003</p>
+    </section>
 
-  <!-- Resume Content Overlay -->
-  <div class="overlay">
-    <div class="content">
-      <!-- Header -->
-      <header data-aos="fade-down">
-        <h1>Zachary A Krivis</h1>
-        <p>
-          Solon, OH | 
-          <a href="mailto:zachkrivis@gmail.com">zachkrivis@gmail.com</a> | 
-          (440) 903-8003
-        </p>
-      </header>
+    <section class="section">
+      <h2>Experience</h2>
+      <h3>Technology Assistant - Solon Senior Center</h3>
+      <p>June 2022 - Present</p>
+      <ul>
+        <li>Provided tech support to 50+ seniors with 95% resolution rate</li>
+        <li>Designed VR experiences using Oculus Quest 2</li>
+      </ul>
 
-      <!-- Experience Section -->
-      <section id="experience" data-aos="fade-up">
-        <h2>Experience</h2>
-        <div class="experience-item">
-          <h3>Technology Assistant – Solon Senior Center</h3>
-          <p><em>June 2022 - Present, Solon, OH</em></p>
-          <ul>
-            <li>Provided hands-on technology support to over 50 senior citizens, achieving a 95% problem resolution rate.</li>
-            <li>Designed and facilitated engaging VR experiences using Oculus Quest 2 with 100% positive participant feedback.</li>
-            <li>Maintained a welcoming environment that increased senior engagement at the center.</li>
-            <li>Coordinated schedule updates and communicated important information with the activities coordinator.</li>
-            <li>Enhanced the well-being of seniors by offering attentive service and fostering a supportive atmosphere.</li>
-          </ul>
-        </div>
-        <div class="experience-item">
-          <h3>Basketball Scorekeeping – Solon Community Center</h3>
-          <p><em>January 2024 - February 2024, Solon, OH</em></p>
-          <ul>
-            <li>Managed scoreboard and game clock operations for over 20 minor league basketball games ensuring real-time accuracy.</li>
-            <li>Enhanced the viewer experience through precise timekeeping and effective communication during high-pressure scenarios.</li>
-          </ul>
-        </div>
-      </section>
+      <h3>Basketball Scorekeeping - Solon Community Center</h3>
+      <p>Jan 2024 - Feb 2024</p>
+      <ul>
+        <li>Managed scoreboard for 20+ games</li>
+        <li>Enhanced viewer experience through precise timing</li>
+      </ul>
+    </section>
 
-      <!-- Academic Achievements Section -->
-      <section id="academic" data-aos="fade-up" data-aos-delay="100">
-        <h2>Academic Achievements</h2>
-        <div class="achievement-item">
-          <h3>Ohio Academy State Science Fair &amp; Thermo Fisher Scientific Junior Innovators Challenge</h3>
-          <p><em>August 2022 - May 2023</em></p>
-          <ul>
-            <li>Developed and showcased an innovative project on 3D printing technology and additive manufacturing for civil engineering applications.</li>
-            <li>Delivered over six presentations to panels of professional STEM judges, receiving high praise for clarity and depth.</li>
-            <li>Achieved near-perfect scores (49/50 and 50/50), reflecting research excellence and presentation quality.</li>
-            <li>Earned the Dr. Lynn E. Elfner Young Scientist Award, Thermo Fisher Scientific Junior Innovators Award, and American Society Of Civil Engineers Third Place; contributed to winning the Harold C. Shaw Outstanding School Award.</li>
-            <li>Qualified/nominated for the Thermo Fisher Scientific Junior Innovators Challenge National Science Fair.</li>
-          </ul>
-        </div>
-      </section>
+    <section class="section">
+      <h2>Academic Achievements</h2>
+      <h3>Ohio Academy State Science Fair</h3>
+      <ul>
+        <li>Developed 3D printing substrates project</li>
+        <li>Awarded multiple prestigious prizes</li>
+        <li>National Science Fair qualifier</li>
+      </ul>
+    </section>
 
-      <!-- Education Section -->
-      <section id="education" data-aos="fade-up" data-aos-delay="200">
-        <h2>Education</h2>
-        <div class="education-item">
-          <h3>Solon High School, Class of 2027</h3>
-          <p><em>Solon, OH</em></p>
-          <ul>
-            <li>Cumulative GPA: 3.9850</li>
-            <li>Relevant Coursework: AP Computer Science A, Honors Pre Calculus</li>
-            <li>Extracurriculars: Junior varsity cross country and indoor/outdoor track (4 years), Concert Band (6 years), Marching Band (2 years), Student Council (2 years), Solon Education TV (4 years), Ski and Snowboard Club (2 years)</li>
-          </ul>
-        </div>
-      </section>
+    <section class="section">
+      <h2>Education</h2>
+      <h3>Solon High School • Class of 2027</h3>
+      <p>3.985 GPA</p>
+      <ul>
+        <li>AP Computer Science A</li>
+        <li>JV Cross Country/Track</li>
+        <li>Concert/Marching Band</li>
+      </ul>
+    </section>
 
-      <!-- Skills Section -->
-      <section id="skills" data-aos="fade-up" data-aos-delay="300">
-        <h2>Skills</h2>
-        <div class="skills-item">
-          <h3>Programming Languages</h3>
-          <ul>
-            <li><strong>Java:</strong> Developed programs including a cashier change calculator, an interactive virtual pet, and an efficient number guessing game.</li>
-            <li><strong>Python:</strong> Created applications such as an intuitive Jeopardy game and a comprehensive shipping price calculator.</li>
-          </ul>
-        </div>
-        <div class="skills-item">
-          <h3>Developer Tools</h3>
-          <ul>
-            <li>GitHub, Visual Studio Code, IntelliJ IDEA, PyCharm, Replit</li>
-          </ul>
-        </div>
-      </section>
-    </div>
+    <section class="section">
+      <h2>Skills</h2>
+      <h3>Languages:</h3>
+      <ul>
+        <li>Java: Virtual pet, number guessing game</li>
+        <li>Python: Jeopardy game, shipping calculator</li>
+      </ul>
+      <h3>Tools:</h3>
+      <p>GitHub, VS Code, IntelliJ, PyCharm</p>
+    </section>
   </div>
 
-  <!-- AOS JS for scroll-triggered animations -->
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <!-- Three.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    AOS.init({
-      duration: 800, // Animation duration in milliseconds
-      easing: 'ease-in-out'
-    });
-  </script>
+    /***** THREE.JS SCENE SETUP *****/
+    const scene = new THREE.Scene();
+    // Set up a perspective camera. (Default: looks down negative z.)
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 0, 0); // start at the origin
 
-  <!-- Canvas Animation Script -->
-  <script>
-    // Setup the canvas and context
-    const canvas = document.getElementById('bg');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-    /* Mountain layers configuration.
-       Each layer has a base (vertical position), amplitude, frequency,
-       horizontal speed, an offset for animation, and a fill color.
-    */
-    const mountains = [
-      { base: canvas.height * 0.3, amplitude: 50, frequency: 0.005, speed: 0.2, offset: 0, color: '#2c3e50' },
-      { base: canvas.height * 0.5, amplitude: 80, frequency: 0.003, speed: 0.3, offset: 0, color: '#34495e' },
-      { base: canvas.height * 0.7, amplitude: 100, frequency: 0.002, speed: 0.4, offset: 0, color: '#95a5a6' }
-    ];
+    // Add lighting for our section objects
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(1, 1, 1);
+    scene.add(directionalLight);
 
-    // Particle system: simulate drifting snowflakes
-    const particles = [];
-    const particleCount = 150;
+    /***** PARTICLE BACKGROUND *****/
+    const particleCount = 5000;
+    const particlesGeometry = new THREE.BufferGeometry();
+    const posArray = new Float32Array(particleCount * 3);
+
+    // Spread particles in a larger z-range for the scrolling scene.
     for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 2 + 1,
-        speed: Math.random() * 1 + 0.5,
-        drift: (Math.random() - 0.5) * 0.5
-      });
+      posArray[i * 3] = (Math.random() - 0.5) * 10;
+      posArray[i * 3 + 1] = (Math.random() - 0.5) * 10;
+      posArray[i * 3 + 2] = (Math.random() - 0.5) * 50;
     }
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
 
-    // Draw the mountain layers
-    function drawMountains() {
-      mountains.forEach(layer => {
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.height);
-        for (let x = 0; x <= canvas.width; x += 10) {
-          // Use a sine wave to simulate mountain curves
-          const y = layer.base + layer.amplitude * Math.sin((x + layer.offset) * layer.frequency);
-          ctx.lineTo(x, y);
+    const particleMaterial = new THREE.PointsMaterial({
+      size: 0.05,
+      color: 0x00f9ff
+    });
+    const particleMesh = new THREE.Points(particlesGeometry, particleMaterial);
+    scene.add(particleMesh);
+
+    /***** TERRAIN (Background Ground) *****/
+    const terrainGeometry = new THREE.PlaneGeometry(50, 50, 50, 50);
+    const terrainMaterial = new THREE.MeshBasicMaterial({
+      color: 0x222222,
+      wireframe: true,
+      opacity: 0.3,
+      transparent: true
+    });
+    const terrain = new THREE.Mesh(terrainGeometry, terrainMaterial);
+    terrain.rotation.x = -Math.PI / 2;
+    // Position it further back so it stays in the background.
+    terrain.position.set(0, -5, -25);
+    scene.add(terrain);
+
+    /***** 3D OBJECTS FOR EACH SECTION *****/
+    // These objects will be placed along -z and animate (rotate) continuously.
+    const sectionDistance = 10;
+    const sectionObjects = [];
+
+    // Section 1: A Cube
+    const cube = new THREE.Mesh(
+      new THREE.BoxGeometry(1, 1, 1),
+      new THREE.MeshStandardMaterial({ color: 0x00f9ff, roughness: 0.5, metalness: 0.1 })
+    );
+    cube.position.set(-2, 0, 0);
+    scene.add(cube);
+    sectionObjects.push(cube);
+
+    // Section 2: A Torus
+    const torus = new THREE.Mesh(
+      new THREE.TorusGeometry(0.7, 0.2, 16, 100),
+      new THREE.MeshStandardMaterial({ color: 0x00f9ff, roughness: 0.5, metalness: 0.1 })
+    );
+    torus.position.set(2, 1, -sectionDistance);
+    scene.add(torus);
+    sectionObjects.push(torus);
+
+    // Section 3: A Sphere
+    const sphere = new THREE.Mesh(
+      new THREE.SphereGeometry(0.7, 32, 32),
+      new THREE.MeshStandardMaterial({ color: 0x00f9ff, roughness: 0.5, metalness: 0.1 })
+    );
+    sphere.position.set(-2, -1, -sectionDistance * 2);
+    scene.add(sphere);
+    sectionObjects.push(sphere);
+
+    // Section 4: A Cone
+    const cone = new THREE.Mesh(
+      new THREE.ConeGeometry(0.7, 1.5, 32),
+      new THREE.MeshStandardMaterial({ color: 0x00f9ff, roughness: 0.5, metalness: 0.1 })
+    );
+    cone.position.set(2, -1, -sectionDistance * 3);
+    scene.add(cone);
+    sectionObjects.push(cone);
+
+    // Section 5: An Octahedron
+    const octahedron = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.7),
+      new THREE.MeshStandardMaterial({ color: 0x00f9ff, roughness: 0.5, metalness: 0.1 })
+    );
+    octahedron.position.set(0, 0, -sectionDistance * 4);
+    scene.add(octahedron);
+    sectionObjects.push(octahedron);
+
+    /***** SCROLL-TRIGGERED FADE-IN FOR DOM SECTIONS *****/
+    const sections = document.querySelectorAll('.section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
         }
-        ctx.lineTo(canvas.width, canvas.height);
-        ctx.closePath();
-        ctx.fillStyle = layer.color;
-        ctx.fill();
-
-        // Update horizontal offset for animation
-        layer.offset += layer.speed;
       });
-    }
+    }, { threshold: 0.5 });
+    sections.forEach(section => observer.observe(section));
 
-    // Draw and update particles (snowflakes)
-    function drawParticles() {
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-      particles.forEach(particle => {
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Update particle position for falling effect
-        particle.y += particle.speed;
-        particle.x += particle.drift;
-
-        // Reset particle to top if it moves off the bottom
-        if (particle.y > canvas.height) {
-          particle.y = -particle.radius;
-          particle.x = Math.random() * canvas.width;
-        }
-        // Wrap horizontally
-        if (particle.x > canvas.width) {
-          particle.x = 0;
-        } else if (particle.x < 0) {
-          particle.x = canvas.width;
-        }
-      });
-    }
-
-    // Main animation loop
+    /***** ANIMATION LOOP *****/
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawMountains();
-      drawParticles();
       requestAnimationFrame(animate);
+
+      // --- Update camera based on scroll ---
+      // Calculate scroll percentage.
+      const totalScrollHeight = document.body.scrollHeight - window.innerHeight;
+      const scrollPercent = window.scrollY / totalScrollHeight;
+      // Move the camera along -z so that it passes through our section objects.
+      camera.position.z = -scrollPercent * (sectionDistance * (sectionObjects.length - 1));
+
+      // --- Rotate our section objects for a dynamic effect ---
+      sectionObjects.forEach(obj => {
+        obj.rotation.x += 0.01;
+        obj.rotation.y += 0.01;
+      });
+
+      // --- Optionally animate particles slightly ---
+      const positions = particleMesh.geometry.attributes.position.array;
+      for (let i = 0; i < positions.length; i += 3) {
+        positions[i] += (Math.random() - 0.5) * 0.001;
+        positions[i + 1] += (Math.random() - 0.5) * 0.001;
+      }
+      particleMesh.geometry.attributes.position.needsUpdate = true;
+
+      renderer.render(scene, camera);
     }
     animate();
 
-    // Adjust canvas size and mountain base values on window resize
+    /***** RESIZE HANDLER *****/
     window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      mountains[0].base = canvas.height * 0.3;
-      mountains[1].base = canvas.height * 0.5;
-      mountains[2].base = canvas.height * 0.7;
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
     });
   </script>
 </body>
