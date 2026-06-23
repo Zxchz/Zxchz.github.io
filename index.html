@@ -2,36 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Zach Krivis</title>
 
-  <meta name="description" content="Zach Krivis — 16, taking neural networks apart to see what they're actually doing. Audio model interpretability, and hardware that probably shouldn't exist." />
+  <meta name="description" content="Zach Krivis — machine learning researcher and software developer from Solon, Ohio. Research at Algoverse, IT at Cleveland Clinic, and award-winning projects." />
   <meta name="author" content="Zach Krivis" />
-  <meta name="theme-color" content="#0b0b0c" />
+  <meta name="theme-color" content="#08080a" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Zach Krivis" />
-  <meta property="og:description" content="I take neural networks apart to see what they're actually doing." />
+  <meta property="og:description" content="Machine learning research and software development." />
   <meta property="og:url" content="https://zxchz.github.io/" />
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <canvas id="field" aria-hidden="true"></canvas>
-  <div class="grain" aria-hidden="true"></div>
+  <div class="bloom" aria-hidden="true"></div>
   <div class="cursor-dot" aria-hidden="true"></div>
 
-  <header class="topbar">
-    <a href="#top" class="mono-link" data-magnetic>ZACH KRIVIS</a>
+  <!-- ───────── NAV ───────── -->
+  <header class="nav">
+    <a href="#top" class="nav-brand" data-magnetic>Zach Krivis</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#education">Education</a>
+      <a href="#contact">Contact</a>
+    </nav>
     <button class="kbar-hint" id="kbar-open" data-magnetic aria-label="Open command menu">
       <span class="kbd">⌘</span><span class="kbd">K</span>
-      <span class="kbar-hint-text">look around</span>
     </button>
   </header>
 
@@ -39,110 +41,250 @@
 
     <!-- ───────── HERO ───────── -->
     <section class="hero">
-      <p class="status reveal" data-reveal>
-        <span class="dot"></span> Solon, Ohio · 16 · currently awake
+      <p class="eyebrow reveal" data-reveal><span class="ping"></span> Solon, Ohio</p>
+      <h1 class="hero-name" data-scramble>Zach Krivis</h1>
+      <p class="hero-sub reveal" data-reveal>Machine learning research &amp; software development.</p>
+      <p class="hero-lede reveal" data-reveal>
+        High school researcher and developer. I build real software and study how neural
+        networks work — drawn to problems that are technically demanding and genuinely useful.
       </p>
-      <h1 class="name" data-scramble>ZACH KRIVIS</h1>
-      <p class="tagline reveal" data-reveal>
-        I take neural networks apart to figure out what they’re <em>actually</em> doing.
-        Lately that means audio models. I also build hardware that probably shouldn’t exist.
-      </p>
-      <button class="ghost-btn reveal" data-reveal data-magnetic id="kbar-open-2">
-        Press <span class="kbd">⌘</span><span class="kbd">K</span> to look around
-      </button>
+      <div class="hero-actions reveal" data-reveal>
+        <a class="btn btn-primary" href="#projects" data-magnetic>View work</a>
+        <a class="btn btn-ghost" href="mailto:zach.krivis@gmail.com" data-magnetic>Get in touch</a>
+      </div>
     </section>
 
     <!-- ───────── ABOUT ───────── -->
-    <section class="block" id="about">
-      <p class="tag reveal" data-reveal>// about</p>
-      <div class="prose">
-        <p class="reveal" data-reveal>
-          I’m sixteen and mostly obsessed with what’s going on <em>inside</em> neural networks —
-          which units fire, which representations actually matter, and how much you can rip out
-          before the whole thing stops working.
+    <section class="section" id="about">
+      <p class="section-tag reveal" data-reveal>About</p>
+      <div class="glass about-card reveal" data-reveal data-tap>
+        <p>
+          I’m a high school student in Ohio focused on machine learning and software
+          development. Most of what I know comes from building real software and doing real
+          research — hands-on work has shaped how I approach problems more than any classroom.
         </p>
-        <p class="reveal" data-reveal>
-          Right now that’s audio foundation models: interpretability and structured sparsity,
-          probing internal activations to find the signal hiding under the noise. A couple of
-          writeups are under review at workshops — <span class="accent-text">results pending</span>.
-        </p>
-        <p class="reveal" data-reveal>
-          When I’m not doing that I’m building hardware, usually things with no practical purpose
-          whatsoever. It’s more fun than it sounds.
+        <p>
+          I’m drawn to work that’s technically demanding and actually matters when it’s done,
+          and I’m always looking for the next project to take on — in research, engineering,
+          or somewhere in between.
         </p>
       </div>
     </section>
 
-    <!-- ───────── BUILD LOG ───────── -->
-    <section class="block" id="work">
-      <p class="tag reveal" data-reveal>// build log</p>
-      <ul class="log">
+    <!-- ───────── EXPERIENCE ───────── -->
+    <section class="section" id="experience">
+      <p class="section-tag reveal" data-reveal>Experience</p>
+      <div class="stack">
 
-        <li class="log-item reveal" data-reveal>
-          <div class="log-head">
-            <span class="log-title">The Useless Button</span>
-            <span class="log-year">2025</span>
+        <article class="glass card reveal" data-reveal data-tap>
+          <div class="card-top">
+            <div>
+              <h3 class="card-role">Information Technology Intern</h3>
+              <p class="card-org">Cleveland Clinic</p>
+            </div>
+            <span class="card-date">Jun 2026 — Present</span>
           </div>
-          <p class="log-where">1st place · Scrapyard Cleveland</p>
-          <p class="log-note">
-            A box whose entire job is to turn itself off. Tap an RFID tag, a button comes alive,
-            and an animated arrow slaps it back off in about 50&nbsp;ms. It won a hackathon, somehow.
+          <p class="card-meta">Internship · Cleveland, Ohio · On-site</p>
+          <p class="card-body">
+            Working with the IT infrastructure team across software infrastructure and
+            enterprise information-technology systems.
           </p>
-          <div class="useless-wrap">
-            <button class="useless" id="useless" data-magnetic aria-label="A useless button">
-              <span class="useless-track"><span class="useless-knob"></span></span>
-              <span class="useless-label">press me</span>
-            </button>
-            <a class="inline-link" href="https://github.com/Zxchz/uselessButton" target="_blank" rel="noopener">source ↗</a>
-          </div>
-        </li>
+          <ul class="chips">
+            <li>Software Infrastructure</li>
+            <li>IT Infrastructure</li>
+            <li>Computer Information Systems</li>
+          </ul>
+        </article>
 
-        <li class="log-item reveal" data-reveal>
-          <div class="log-head">
-            <span class="log-title">Audio model interpretability</span>
-            <span class="log-year">2026—</span>
+        <article class="glass card reveal" data-reveal data-tap>
+          <div class="card-top">
+            <div>
+              <h3 class="card-role">Machine Learning Researcher</h3>
+              <p class="card-org">Algoverse</p>
+            </div>
+            <span class="card-date">Jan 2026 — Present</span>
           </div>
-          <p class="log-where">Algoverse AI Research</p>
-          <p class="log-note">
+          <p class="card-meta">Internship · Remote</p>
+          <p class="card-body">
+            Research on neural-network interpretability and structured sparsity for audio
+            foundation models — identifying the internal representations that carry signal,
+            and what remains once the rest is pruned. <span class="hl">Under review at workshops.</span>
+          </p>
+          <ul class="chips">
+            <li>Machine Learning</li>
+            <li>Neural Networks</li>
+            <li>Applied ML</li>
+            <li>Large Language Models</li>
+            <li>Architecture Design</li>
+          </ul>
+        </article>
+
+        <article class="glass card reveal" data-reveal data-tap>
+          <div class="card-top">
+            <div>
+              <h3 class="card-role">Team Member</h3>
+              <p class="card-org">Mitchell’s Ice Cream</p>
+            </div>
+            <span class="card-date">Apr 2025 — Present</span>
+          </div>
+          <p class="card-meta">Part-time · Solon, Ohio · On-site</p>
+          <p class="card-body">
+            Customer-facing retail and food-service role balanced alongside research and school.
+          </p>
+          <ul class="chips">
+            <li>Customer Service</li>
+            <li>Teamwork</li>
+          </ul>
+        </article>
+
+        <article class="glass card reveal" data-reveal data-tap>
+          <div class="card-top">
+            <div>
+              <h3 class="card-role">Technology Assistant</h3>
+              <p class="card-org">Solon Senior Center</p>
+            </div>
+            <span class="card-date">Jun 2022 — Aug 2023</span>
+          </div>
+          <p class="card-meta">Part-time · Solon, Ohio · On-site</p>
+          <ul class="bullets">
+            <li>Provided hands-on technology support to 50+ seniors across smartphones, laptops, and car infotainment systems.</li>
+            <li>Designed and facilitated VR experiences on the Oculus Quest 2.</li>
+            <li>Built software-training modules that improved digital proficiency for 50 seniors over six months.</li>
+            <li>Coordinated with the activities coordinator to keep daily programs running smoothly.</li>
+          </ul>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ───────── PROJECTS ───────── -->
+    <section class="section" id="projects">
+      <p class="section-tag reveal" data-reveal>Projects</p>
+      <div class="grid">
+
+        <article class="glass card reveal" data-reveal data-tap>
+          <div class="card-top">
+            <h3 class="card-role">Audio Model Interpretability</h3>
+            <span class="card-date">2026</span>
+          </div>
+          <p class="card-meta">Research · Algoverse</p>
+          <p class="card-body">
             Interpretability and structured sparsity on audio foundation models — locating the
-            internal representations that carry the signal, and what survives when you prune the
-            rest. <span class="accent-text">Under review @ workshops.</span>
+            internal representations that carry the signal and what survives pruning.
+            <span class="hl">Under review at workshops.</span>
           </p>
-        </li>
+        </article>
 
-        <li class="log-item reveal" data-reveal>
-          <div class="log-head">
-            <span class="log-title">A Million Noiseless Qubits</span>
-            <span class="log-year">2026</span>
+        <article class="glass card reveal" data-reveal data-tap>
+          <div class="card-top">
+            <h3 class="card-role">The Useless Button</h3>
+            <span class="card-date">2025</span>
           </div>
-          <p class="log-where">Rising Scholars Award</p>
-          <p class="log-note">
-            An essay on what quantum computing turns into once you delete the noise — a million
-            error-free qubits and what they’d break. An Oxford professor liked it.
+          <p class="card-meta">1st Place · Scrapyard Cleveland</p>
+          <p class="card-body">
+            A device whose only function is to turn itself off. An RFID tag activates a button,
+            and a motorized arm switches it back off in roughly 50&nbsp;ms.
           </p>
-        </li>
+          <div class="card-foot">
+            <button class="toggle" id="useless" data-magnetic aria-label="Demo toggle">
+              <span class="toggle-track"><span class="toggle-knob"></span></span>
+              <span class="toggle-label">try it</span>
+            </button>
+            <a class="text-link" href="https://github.com/Zxchz/uselessButton" target="_blank" rel="noopener">Source ↗</a>
+          </div>
+        </article>
 
-      </ul>
+        <article class="glass card reveal" data-reveal data-tap>
+          <div class="card-top">
+            <h3 class="card-role">A Million Noiseless Qubits</h3>
+            <span class="card-date">2026</span>
+          </div>
+          <p class="card-meta">Rising Scholars Award</p>
+          <p class="card-body">
+            An essay on what quantum computing becomes once noise is removed — a million
+            fault-free qubits and what they would make possible.
+          </p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ───────── EDUCATION ───────── -->
+    <section class="section" id="education">
+      <p class="section-tag reveal" data-reveal>Education</p>
+      <div class="glass card reveal" data-reveal data-tap>
+        <div class="card-top">
+          <div>
+            <h3 class="card-role">Solon High School</h3>
+            <p class="card-org">Senior · Class of 2027</p>
+          </div>
+          <span class="card-date">Aug 2023 — May 2027</span>
+        </div>
+        <p class="card-meta">Relevant coursework</p>
+        <ul class="chips">
+          <li>AP Computer Science A</li>
+          <li>AP Calculus AB</li>
+          <li>AP Physics 1</li>
+          <li>AP Physics C: Mechanics</li>
+          <li>AP English Language &amp; Composition</li>
+          <li>AP Environmental Science</li>
+          <li>AP U.S. History</li>
+          <li>Honors Precalculus</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ───────── SKILLS ───────── -->
+    <section class="section" id="skills">
+      <p class="section-tag reveal" data-reveal>Skills</p>
+      <div class="skill-cols">
+        <div class="glass card reveal" data-reveal data-tap>
+          <h3 class="card-role sm">Machine Learning &amp; AI</h3>
+          <ul class="chips">
+            <li>Machine Learning</li>
+            <li>Neural Networks</li>
+            <li>Applied ML</li>
+            <li>Neural Network Architecture Design</li>
+            <li>Large Language Models</li>
+            <li>Artificial Intelligence</li>
+          </ul>
+        </div>
+        <div class="glass card reveal" data-reveal data-tap>
+          <h3 class="card-role sm">Software &amp; Infrastructure</h3>
+          <ul class="chips">
+            <li>Software Infrastructure</li>
+            <li>IT Infrastructure</li>
+            <li>Computer Information Systems</li>
+          </ul>
+        </div>
+        <div class="glass card reveal" data-reveal data-tap>
+          <h3 class="card-role sm">Working Style</h3>
+          <ul class="chips">
+            <li>Teamwork</li>
+            <li>Leadership</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <!-- ───────── CONTACT ───────── -->
-    <section class="block contact" id="contact">
-      <p class="tag reveal" data-reveal>// say hi</p>
-      <p class="contact-line reveal" data-reveal>
-        Always up for research, weird hardware, or a good problem.
-      </p>
-      <a class="email reveal" data-reveal data-magnetic href="mailto:zach.krivis@gmail.com">zach.krivis@gmail.com</a>
-      <div class="socials reveal" data-reveal>
-        <a href="https://github.com/Zxchz" target="_blank" rel="noopener" data-magnetic>GitHub</a>
-        <a href="https://www.linkedin.com/in/zachary-krivis-947406309" target="_blank" rel="noopener" data-magnetic>LinkedIn</a>
+    <section class="section contact" id="contact">
+      <p class="section-tag reveal" data-reveal>Contact</p>
+      <div class="glass card contact-card reveal" data-reveal data-tap>
+        <p class="contact-lede">Open to research, engineering, and good problems.</p>
+        <a class="email" href="mailto:zach.krivis@gmail.com" data-magnetic>zach.krivis@gmail.com</a>
+        <div class="socials">
+          <a href="https://github.com/Zxchz" target="_blank" rel="noopener" data-magnetic>GitHub</a>
+          <a href="https://www.linkedin.com/in/zachary-krivis-947406309" target="_blank" rel="noopener" data-magnetic>LinkedIn</a>
+        </div>
       </div>
     </section>
 
   </main>
 
   <footer class="footer">
-    <span>Built by hand · no templates</span>
-    <span>© <span id="year"></span></span>
+    <span>Solon, Ohio</span>
+    <span>© <span id="year"></span> Zach Krivis</span>
   </footer>
 
   <script type="module" src="js/field.js"></script>

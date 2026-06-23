@@ -1,218 +1,186 @@
 /* ============================================================
-   Site interactions — the "alive" layer.
-   Independent of the canvas: text scramble, magnetic hovers,
-   a trailing cursor, a ⌘K command palette, the Useless Button,
-   reveal-on-scroll, and a Konami easter egg.
+   Interaction layer. Apple-clean baseline, subtle/fast motion.
+   Desktop: magnetic accents, trailing cursor, name decode.
+   Touch: hover disabled, quick tap feedback (no lag).
+   Plus a ⌘K command palette and a couple of quiet easter eggs.
    ============================================================ */
 
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 /* ---------- year ---------- */
-const y = document.getElementById("year");
-if (y) y.textContent = new Date().getFullYear();
+const yEl = document.getElementById("year");
+if (yEl) yEl.textContent = new Date().getFullYear();
 
-/* ---------- reveal ---------- */
+/* ---------- reveal on scroll (subtle, fast, staggered) ---------- */
 const revealEls = document.querySelectorAll("[data-reveal]");
 if ("IntersectionObserver" in window && !reduce) {
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
-      if (e.isIntersecting) { e.target.classList.add("is-visible"); io.unobserve(e.target); }
+      if (!e.isIntersecting) return;
+      const sibs = [...e.target.parentElement.querySelectorAll(":scope > [data-reveal]")];
+      const i = Math.max(0, sibs.indexOf(e.target));
+      e.target.style.transitionDelay = Math.min(i * 60, 240) + "ms";
+      e.target.classList.add("is-visible");
+      io.unobserve(e.target);
     });
-  }, { threshold: 0.15, rootMargin: "0px 0px -6% 0px" });
+  }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
   revealEls.forEach((el) => io.observe(el));
 } else {
   revealEls.forEach((el) => el.classList.add("is-visible"));
 }
 
-/* ---------- scroll pct (kept global for any consumers) ---------- */
-function scrollPct() {
-  const hgt = document.documentElement.scrollHeight - window.innerHeight;
-  window.__scrollPct = hgt > 0 ? Math.min(window.scrollY / hgt, 1) : 0;
-}
-window.addEventListener("scroll", scrollPct, { passive: true });
-scrollPct();
-
-/* ---------- text scramble ---------- */
-const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&*<>/\\{}[]01";
-function scramble(el, finalText, speed = 1) {
-  const len = finalText.length;
+/* ---------- name decode (fast) ---------- */
+const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz#%&*<>/";
+function scramble(el, text, speed = 1.6) {
+  const len = text.length;
   let frame = 0;
-  const reveals = [];
-  for (let i = 0; i < len; i++) {
-    reveals[i] = Math.floor(8 + Math.random() * 26) / speed;
-  }
-  function tick() {
-    let out = "";
-    let done = 0;
+  const done = [];
+  for (let i = 0; i < len; i++) done[i] = Math.floor(4 + Math.random() * 16) / speed;
+  (function tick() {
+    let out = "", finished = 0;
     for (let i = 0; i < len; i++) {
-      if (frame >= reveals[i]) { out += finalText[i]; done++; }
-      else if (finalText[i] === " ") { out += " "; done++; }
+      if (text[i] === " ") { out += " "; finished++; }
+      else if (frame >= done[i]) { out += text[i]; finished++; }
       else out += GLYPHS[(Math.random() * GLYPHS.length) | 0];
     }
     el.textContent = out;
     frame++;
-    if (done < len) requestAnimationFrame(tick);
-    else el.textContent = finalText;
-  }
-  tick();
+    if (finished < len) requestAnimationFrame(tick);
+    else el.textContent = text;
+  })();
 }
-const scrambleEls = document.querySelectorAll("[data-scramble]");
-scrambleEls.forEach((el) => {
+document.querySelectorAll("[data-scramble]").forEach((el) => {
   const text = el.textContent.trim();
-  el.dataset.text = text;
   if (reduce) { el.textContent = text; return; }
-  setTimeout(() => scramble(el, text), 150);
-  // re-scramble on hover (desktop)
-  if (fine) el.addEventListener("pointerenter", () => scramble(el, text, 1.6));
+  setTimeout(() => scramble(el, text), 120);
 });
 
-/* ---------- magnetic ---------- */
+/* ---------- magnetic (desktop only) ---------- */
 if (fine && !reduce) {
   document.querySelectorAll("[data-magnetic]").forEach((el) => {
-    const strength = 0.34;
     el.addEventListener("pointermove", (e) => {
       const r = el.getBoundingClientRect();
-      const dx = e.clientX - (r.left + r.width / 2);
-      const dy = e.clientY - (r.top + r.height / 2);
-      el.style.transform = `translate(${dx * strength}px, ${dy * strength}px)`;
+      const dx = (e.clientX - (r.left + r.width / 2)) * 0.25;
+      const dy = (e.clientY - (r.top + r.height / 2)) * 0.25;
+      el.style.transform = `translate(${dx}px, ${dy}px)`;
     });
     el.addEventListener("pointerleave", () => { el.style.transform = ""; });
   });
 }
 
-/* ---------- trailing cursor ---------- */
+/* ---------- trailing cursor (desktop only) ---------- */
 const cursor = document.querySelector(".cursor-dot");
 if (cursor && fine && !reduce) {
   let cx = -100, cy = -100, tx = -100, ty = -100;
   window.addEventListener("pointermove", (e) => { tx = e.clientX; ty = e.clientY; });
   (function loop() {
-    cx += (tx - cx) * 0.2; cy += (ty - cy) * 0.2;
-    cursor.style.transform = `translate(${cx - 3.5}px, ${cy - 3.5}px)`;
+    cx += (tx - cx) * 0.18; cy += (ty - cy) * 0.18;
+    cursor.style.transform = `translate(${cx - 13}px, ${cy - 13}px)`;
     requestAnimationFrame(loop);
   })();
-  const hot = "a, button, [data-magnetic], input";
   document.addEventListener("pointerover", (e) => {
-    if (e.target.closest(hot)) cursor.classList.add("is-big");
-    else cursor.classList.remove("is-big");
+    cursor.classList.toggle("is-hot", !!e.target.closest("a, button, [data-magnetic]"));
   });
 }
 
-/* ---------- the Useless Button ---------- */
+/* ---------- mobile tap feedback (no lag) ---------- */
+if (!fine) {
+  document.querySelectorAll("[data-tap]").forEach((el) => {
+    el.addEventListener("touchstart", () => el.classList.add("tapped"), { passive: true });
+    const clear = () => el.classList.remove("tapped");
+    el.addEventListener("touchend", clear, { passive: true });
+    el.addEventListener("touchcancel", clear, { passive: true });
+  });
+}
+
+/* ---------- demo toggle (Useless Button) ---------- */
 const useless = document.getElementById("useless");
 if (useless) {
-  const label = useless.querySelector(".useless-label");
+  const label = useless.querySelector(".toggle-label");
   let busy = false;
   useless.addEventListener("click", () => {
-    if (busy) return;
-    busy = true;
-    useless.classList.add("on");
-    label.textContent = "...on?";
-    // it refuses to stay on
+    if (busy) return; busy = true;
+    useless.classList.add("on"); label.textContent = "on";
     setTimeout(() => {
-      useless.classList.remove("on");
-      label.textContent = "nope.";
-      setTimeout(() => { label.textContent = "press me"; busy = false; }, 900);
-    }, 650);
+      useless.classList.remove("on"); label.textContent = "off";
+      setTimeout(() => { label.textContent = "try it"; busy = false; }, 800);
+    }, 600);
   });
 }
 
 /* ---------- command palette ---------- */
-const fireShock = (x, y) =>
-  window.dispatchEvent(new MouseEvent("pointerdown", { clientX: x, clientY: y }));
-
-function makeItRain() {
+const fireShock = (x, y) => window.dispatchEvent(new MouseEvent("pointerdown", { clientX: x, clientY: y }));
+function ripple() {
   let n = 0;
   const t = setInterval(() => {
-    fireShock(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
-    if (++n > 14) clearInterval(t);
+    fireShock(Math.random() * innerWidth, Math.random() * innerHeight);
+    if (++n > 10) clearInterval(t);
   }, 90);
 }
-
-const goto = (sel) => document.querySelector(sel)?.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+const goto = (s) => document.querySelector(s)?.scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
 
 const COMMANDS = [
-  { label: "About", hint: "who", run: () => goto("#about") },
-  { label: "Build log", hint: "work", run: () => goto("#work") },
-  { label: "Say hi", hint: "contact", run: () => goto("#contact") },
-  { label: "Copy email", hint: "zach.krivis@gmail.com", run: copyEmail },
+  { label: "About", hint: "↵", run: () => goto("#about") },
+  { label: "Experience", hint: "↵", run: () => goto("#experience") },
+  { label: "Projects", hint: "↵", run: () => goto("#projects") },
+  { label: "Education", hint: "↵", run: () => goto("#education") },
+  { label: "Skills", hint: "↵", run: () => goto("#skills") },
+  { label: "Contact", hint: "↵", run: () => goto("#contact") },
+  { label: "Copy email", hint: "zach.krivis@gmail.com", run: () => navigator.clipboard?.writeText("zach.krivis@gmail.com").catch(() => {}) },
   { label: "GitHub", hint: "↗", run: () => window.open("https://github.com/Zxchz", "_blank") },
   { label: "LinkedIn", hint: "↗", run: () => window.open("https://www.linkedin.com/in/zachary-krivis-947406309", "_blank") },
-  { label: "Press the useless button", hint: "why", run: () => { goto("#work"); setTimeout(() => useless?.click(), 600); } },
-  { label: "Make it rain", hint: "↯", run: makeItRain },
+  { label: "Ripple", hint: "·", run: ripple },
 ];
 
-function copyEmail() {
-  navigator.clipboard?.writeText("zach.krivis@gmail.com").catch(() => {});
-}
-
-// build DOM
 const kbar = document.createElement("div");
 kbar.className = "kbar";
-kbar.innerHTML = `
-  <div class="kbar-panel" role="dialog" aria-label="Command menu">
-    <input class="kbar-input" type="text" placeholder="type a command…" aria-label="Command" />
-    <div class="kbar-list"></div>
-  </div>`;
+kbar.innerHTML = `<div class="kbar-panel" role="dialog" aria-label="Command menu">
+  <input class="kbar-input" type="text" placeholder="Search…" aria-label="Command" />
+  <div class="kbar-list"></div></div>`;
 document.body.appendChild(kbar);
 const input = kbar.querySelector(".kbar-input");
 const list = kbar.querySelector(".kbar-list");
 let active = 0, filtered = COMMANDS.slice();
 
-function renderList() {
+function render() {
   list.innerHTML = "";
-  if (!filtered.length) {
-    list.innerHTML = `<div class="kbar-empty">nothing here. try "make it rain".</div>`;
-    return;
-  }
-  filtered.forEach((cmd, i) => {
+  if (!filtered.length) { list.innerHTML = `<div class="kbar-empty">No matches.</div>`; return; }
+  filtered.forEach((c, i) => {
     const row = document.createElement("div");
     row.className = "kbar-row" + (i === active ? " active" : "");
-    row.innerHTML = `<span class="k-label">${cmd.label}</span><span class="k-hint">${cmd.hint}</span>`;
-    row.addEventListener("click", () => runActive(i));
+    row.innerHTML = `<span class="k-label">${c.label}</span><span class="k-hint">${c.hint}</span>`;
+    row.addEventListener("click", () => run(i));
     row.addEventListener("pointermove", () => { active = i; paint(); });
     list.appendChild(row);
   });
 }
-function paint() {
-  [...list.children].forEach((c, i) => c.classList.toggle("active", i === active));
-}
-function openBar() {
-  kbar.classList.add("open");
-  input.value = ""; filtered = COMMANDS.slice(); active = 0; renderList();
-  setTimeout(() => input.focus(), 30);
-}
-function closeBar() { kbar.classList.remove("open"); }
-function runActive(i = active) {
-  const cmd = filtered[i];
-  closeBar();
-  if (cmd) setTimeout(cmd.run, 120);
-}
+const paint = () => [...list.children].forEach((c, i) => c.classList.toggle("active", i === active));
+function open() { kbar.classList.add("open"); input.value = ""; filtered = COMMANDS.slice(); active = 0; render(); setTimeout(() => input.focus(), 30); }
+function close() { kbar.classList.remove("open"); }
+function run(i = active) { const c = filtered[i]; close(); if (c) setTimeout(c.run, 100); }
 
 input.addEventListener("input", () => {
   const q = input.value.toLowerCase().trim();
   filtered = COMMANDS.filter((c) => (c.label + " " + c.hint).toLowerCase().includes(q));
-  active = 0; renderList();
+  active = 0; render();
 });
 input.addEventListener("keydown", (e) => {
   if (e.key === "ArrowDown") { e.preventDefault(); active = Math.min(active + 1, filtered.length - 1); paint(); }
   else if (e.key === "ArrowUp") { e.preventDefault(); active = Math.max(active - 1, 0); paint(); }
-  else if (e.key === "Enter") { e.preventDefault(); runActive(); }
+  else if (e.key === "Enter") { e.preventDefault(); run(); }
 });
-kbar.addEventListener("click", (e) => { if (e.target === kbar) closeBar(); });
-
+kbar.addEventListener("click", (e) => { if (e.target === kbar) close(); });
 window.addEventListener("keydown", (e) => {
-  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); kbar.classList.contains("open") ? closeBar() : openBar(); }
-  else if (e.key === "Escape") closeBar();
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); kbar.classList.contains("open") ? close() : open(); }
+  else if (e.key === "Escape") close();
 });
-document.getElementById("kbar-open")?.addEventListener("click", openBar);
-document.getElementById("kbar-open-2")?.addEventListener("click", openBar);
+document.getElementById("kbar-open")?.addEventListener("click", open);
 
-/* ---------- Konami ---------- */
-const KONAMI = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
-let kPos = 0;
+/* ---------- Konami (quiet) ---------- */
+const K = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+let kp = 0;
 window.addEventListener("keydown", (e) => {
-  if (e.key.toLowerCase() === KONAMI[kPos].toLowerCase()) {
-    if (++kPos === KONAMI.length) { kPos = 0; makeItRain(); }
-  } else kPos = 0;
+  if (e.key.toLowerCase() === K[kp].toLowerCase()) { if (++kp === K.length) { kp = 0; ripple(); } }
+  else kp = 0;
 });
