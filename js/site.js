@@ -166,6 +166,19 @@ window.addEventListener("keydown", (e) => {
   else kp = 0;
 });
 
+/* ---------- last-updated stamp (live from GitHub, baked fallback) ---------- */
+const updatedEl = document.getElementById("updated");
+if (updatedEl) {
+  fetch("https://api.github.com/repos/Zxchz/zxchz.github.io/commits?per_page=1", { headers: { Accept: "application/vnd.github+json" } })
+    .then((r) => (r.ok ? r.json() : Promise.reject()))
+    .then((d) => {
+      const iso = d?.[0]?.commit?.committer?.date;
+      if (!iso) return;
+      updatedEl.textContent = "Updated " + new Date(iso).toLocaleDateString("en-US", { month: "short", year: "numeric" });
+    })
+    .catch(() => {});
+}
+
 /* ---------- active section (scrollspy) ---------- */
 const navMap = new Map();
 document.querySelectorAll(".nav-links a").forEach((a) => {
