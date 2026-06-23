@@ -1,121 +1,141 @@
 /* ============================================================
-   Signal — a quiet oscilloscope.
-   A few thin monochrome lines that breathe like an idle audio
-   trace and lean toward the cursor. Restrained on purpose: it
-   lives behind the hero and fades away as you scroll. If WebGL
-   or three.js is unavailable the page still reads perfectly.
+   Physics playground — a grid of little "+" marks (graph paper
+   for a lab notebook). Each one springs back to its home and
+   scatters away from the cursor; a click sends a shockwave
+   through the field. Plain 2D canvas, no dependencies.
+   Purely decorative: if it fails, the page is unaffected.
    ============================================================ */
-
-import * as THREE from "three";
 
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const canvas = document.getElementById("field");
-if (canvas) init();
+const ctx = canvas && canvas.getContext("2d");
+if (canvas && ctx) start();
 
-function init() {
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  } catch (err) {
-    canvas.style.display = "none";
-    return;
-  }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.setSize(window.innerWidth, window.innerHeight, false);
+function start() {
+  let DPR = Math.min(window.devicePixelRatio || 1, 2);
+  let w = 0, h = 0;
+  let pts = [];
+  const SPACING_BASE = 46;
 
-  const scene = new THREE.Scene();
-  let aspect = window.innerWidth / window.innerHeight;
-  const camera = new THREE.OrthographicCamera(-aspect, aspect, 1, -1, 0.1, 10);
-  camera.position.z = 2;
+  const ACCENT = [200, 255, 0];
+  const BASE = [120, 120, 116];
 
-  // a few stacked traces, the centre one brightest
-  const SEG = 240;
-  const LINES = [
-    { y: 0.00, amp: 0.085, freq: 2.1, speed: 0.55, opacity: 0.40 },
-    { y: 0.06, amp: 0.050, freq: 3.0, speed: -0.40, opacity: 0.16 },
-    { y: -0.07, amp: 0.060, freq: 1.5, speed: 0.32, opacity: 0.16 },
-  ];
+  // pointer
+  const pointer = { x: -9999, y: -9999, active: false };
+  const REPEL = 120;      // radius of cursor influence
+  let shock = null;       // {x,y,t}
 
-  const traces = LINES.map((cfg) => {
-    const positions = new Float32Array((SEG + 1) * 3);
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    const mat = new THREE.LineBasicMaterial({
-      color: 0xece9e3,
-      transparent: true,
-      opacity: cfg.opacity,
-    });
-    const line = new THREE.Line(geo, mat);
-    scene.add(line);
-    return { cfg, geo, positions };
-  });
+  function build() {
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas.width = w * DPR;
+    canvas.height = h * DPR;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 
-  // pointer (normalised -aspect..aspect on x, -1..1 on y)
-  let mouseX = 0, mouseTargetX = 0, mouseEnergy = 0, mouseTargetEnergy = 0;
-  window.addEventListener("pointermove", (e) => {
-    mouseTargetX = ((e.clientX / window.innerWidth) * 2 - 1) * aspect;
-    mouseTargetEnergy = 1;
-  }, { passive: true });
-  window.addEventListener("pointerleave", () => { mouseTargetEnergy = 0; });
+    const spacing = w < 640 ? SPACING_BASE * 1.25 : SPACING_BASE;
+    const cols = Math.ceil(w / spacing) + 1;
+    const rows = Math.ceil(h / spacing) + 1;
+    const offX = (w - (cols - 1) * spacing) / 2;
+    const offY = (h - (rows - 1) * spacing) / 2;
 
-  function onResize() {
-    aspect = window.innerWidth / window.innerHeight;
-    camera.left = -aspect; camera.right = aspect;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight, false);
-  }
-  window.addEventListener("resize", onResize);
-
-  const clock = new THREE.Clock();
-  let frame;
-
-  function build(t) {
-    mouseX += (mouseTargetX - mouseX) * 0.06;
-    mouseEnergy += (mouseTargetEnergy - mouseEnergy) * 0.05;
-    mouseTargetEnergy *= 0.96;
-
-    for (const { cfg, geo, positions } of traces) {
-      for (let i = 0; i <= SEG; i++) {
-        const u = i / SEG;
-        const x = -aspect + u * 2 * aspect;
-        // taper ends so lines dissolve at the edges
-        const envelope = Math.sin(Math.PI * u);
-        // resting audio-like trace
-        let y =
-          Math.sin(x * cfg.freq + t * cfg.speed) * cfg.amp +
-          Math.sin(x * cfg.freq * 2.3 - t * cfg.speed * 0.7) * cfg.amp * 0.35;
-        // local lift toward the cursor
-        const d = x - mouseX;
-        const bump = Math.exp(-d * d * 7.0) * 0.16 * mouseEnergy;
-        y = cfg.y + (y + bump) * envelope;
-
-        positions[i * 3] = x;
-        positions[i * 3 + 1] = y;
-        positions[i * 3 + 2] = 0;
+    pts = [];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const hx = offX + c * spacing;
+        const hy = offY + r * spacing;
+        pts.push({ hx, hy, x: hx, y: hy, vx: 0, vy: 0 });
       }
-      geo.attributes.position.needsUpdate = true;
     }
   }
+  build();
+  window.addEventListener("resize", build);
 
-  function render() {
-    const t = clock.getElapsedTime();
-    build(t);
-    // fade the whole field out across the first screenful of scroll
-    const s = window.__scrollPct || 0;
-    canvas.style.opacity = String(Math.max(0, 1 - s * 6));
-    renderer.render(scene, camera);
-    frame = requestAnimationFrame(render);
+  window.addEventListener("pointermove", (e) => {
+    pointer.x = e.clientX; pointer.y = e.clientY; pointer.active = true;
+  }, { passive: true });
+  window.addEventListener("pointerleave", () => { pointer.active = false; pointer.x = -9999; });
+  window.addEventListener("pointerdown", (e) => { shock = { x: e.clientX, y: e.clientY, t: 0 }; }, { passive: true });
+
+  function lerpColor(t) {
+    return [
+      Math.round(BASE[0] + (ACCENT[0] - BASE[0]) * t),
+      Math.round(BASE[1] + (ACCENT[1] - BASE[1]) * t),
+      Math.round(BASE[2] + (ACCENT[2] - BASE[2]) * t),
+    ];
   }
 
+  function plus(x, y, s, col, a) {
+    ctx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${a})`;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x - s, y); ctx.lineTo(x + s, y);
+    ctx.moveTo(x, y - s); ctx.lineTo(x, y + s);
+    ctx.stroke();
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, w, h);
+
+    // advance shockwave
+    let sw = null;
+    if (shock) {
+      shock.t += 1;
+      const radius = shock.t * 9;
+      if (radius > Math.hypot(w, h) + 120) shock = null;
+      else sw = { x: shock.x, y: shock.y, radius };
+    }
+
+    for (const p of pts) {
+      // cursor repulsion
+      if (pointer.active) {
+        const dx = p.x - pointer.x;
+        const dy = p.y - pointer.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < REPEL && dist > 0.01) {
+          const force = (1 - dist / REPEL) * 5.5;
+          p.vx += (dx / dist) * force;
+          p.vy += (dy / dist) * force;
+        }
+      }
+      // shockwave push
+      if (sw) {
+        const dx = p.x - sw.x, dy = p.y - sw.y;
+        const dist = Math.hypot(dx, dy);
+        const band = Math.abs(dist - sw.radius);
+        if (band < 40 && dist > 0.01) {
+          const force = (1 - band / 40) * 6;
+          p.vx += (dx / dist) * force;
+          p.vy += (dy / dist) * force;
+        }
+      }
+      // spring home + damping
+      p.vx += (p.hx - p.x) * 0.05;
+      p.vy += (p.hy - p.y) * 0.05;
+      p.vx *= 0.86; p.vy *= 0.86;
+      p.x += p.vx; p.y += p.vy;
+
+      // displacement drives color + size
+      const disp = Math.min(Math.hypot(p.x - p.hx, p.y - p.hy) / 26, 1);
+      const col = lerpColor(disp);
+      const alpha = 0.18 + disp * 0.72;
+      plus(p.x, p.y, 3 + disp * 2.5, col, alpha);
+    }
+
+    raf = requestAnimationFrame(frame);
+  }
+
+  let raf;
   if (prefersReduced) {
-    build(0.6);
-    renderer.render(scene, camera);
+    // static field, no motion
+    for (const p of pts) plus(p.x, p.y, 3, BASE, 0.16);
   } else {
-    render();
+    frame();
   }
 
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) cancelAnimationFrame(frame);
-    else if (!prefersReduced) render();
+    if (document.hidden) cancelAnimationFrame(raf);
+    else if (!prefersReduced) frame();
   });
 }
