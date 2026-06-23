@@ -2,12 +2,21 @@
    Interaction layer. Deliberately small and cheap.
    No canvas, no per-frame cursor loop, no magnetic transforms.
    Just: scroll reveals, stat count-ups, a quick name decode,
-   the Useless Button demo, a command palette, and two quiet
-   easter eggs (Konami + grid overlay). Motion is transform /
-   opacity only and everything runs on demand.
+   the Useless Button demo, a command palette, the showcase
+   scroll-tilt, and two quiet easter eggs (Konami + grid).
+   Motion is transform / opacity only and everything runs on
+   demand — the scroll driver is gated to when the showcase is
+   actually on screen.
    ============================================================ */
 
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- intro color-bends: drop the node once it has faded ---------- */
+const introBends = document.getElementById("intro-bends");
+if (introBends) {
+  if (reduce) introBends.remove();
+  else introBends.addEventListener("animationend", () => introBends.remove(), { once: true });
+}
 
 const yEl = document.getElementById("year");
 if (yEl) yEl.textContent = new Date().getFullYear();
@@ -233,6 +242,47 @@ if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
     el.addEventListener("pointerenter", (e) => side(el, e));
     el.addEventListener("pointerleave", (e) => side(el, e));
   });
+}
+
+/* ---------- showcase scroll-tilt (Apple-style reveal) ----------
+   A perspective card that starts tilted back and flattens as it
+   scrolls into view. Passive scroll + rAF, gated by an observer
+   so it costs nothing when off screen. Gentler on mobile; off
+   under reduced motion (CSS already renders it flat).            */
+const tilt = document.querySelector("[data-tilt]");
+if (tilt && !reduce) {
+  const stage = tilt.closest(".showcase-stage") || tilt;
+  const mqMobile = window.matchMedia("(max-width: 768px)");
+  const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  let ticking = false;
+
+  function update() {
+    ticking = false;
+    const r = stage.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    // 0 as the stage enters from the bottom, 1 once it has settled near the top
+    const p = clamp((vh - r.top) / (vh * 0.85), 0, 1);
+    const m = mqMobile.matches;
+    const rot = lerp(m ? 8 : 16, 0, p);
+    const scl = lerp(m ? 0.97 : 0.94, 1, p);
+    tilt.style.transform = `rotateX(${rot.toFixed(2)}deg) scale(${scl.toFixed(4)})`;
+  }
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { window.addEventListener("scroll", onScroll, { passive: true }); update(); }
+        else window.removeEventListener("scroll", onScroll);
+      });
+    }, { rootMargin: "120px 0px 120px 0px" });
+    io.observe(stage);
+  } else {
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+  window.addEventListener("resize", onScroll, { passive: true });
+  update();
 }
 
 console.log("%cBuilt by hand. Try ⌘K, press g then a section key, or the Konami code.", "color:#c8f135;font-family:monospace");

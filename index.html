@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <div class="intro-bends" id="intro-bends" aria-hidden="true"></div>
   <div class="grid-overlay" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
 
   <!-- ───────── NAV ───────── -->
@@ -51,8 +52,48 @@
         <li>C++</li>
         <li>Writer</li>
       </ul>
-      <div class="wave-wrap reveal" data-reveal>
-        <canvas id="wave" aria-hidden="true"></canvas>
+    </section>
+
+    <!-- ───────── SHOWCASE (scroll reveal) ───────── -->
+    <section class="showcase" id="showcase" aria-label="Selected interfaces">
+      <div class="showcase-head reveal" data-reveal>
+        <p class="showcase-kicker mono">Selected work</p>
+        <h2 class="showcase-title">Built to be looked at closely.</h2>
+      </div>
+      <div class="showcase-stage">
+        <div class="showcase-frame" data-tilt>
+          <div class="showcase-bar" aria-hidden="true">
+            <span class="dotmac"></span><span class="dotmac"></span><span class="dotmac"></span>
+            <span class="showcase-tab mono">interpretability.ipynb</span>
+          </div>
+          <div class="showcase-screen">
+            <!-- Placeholder framing a real project interface.
+                 Swap the .showcase-ph block for a screenshot, e.g.:
+                 <img src="assets/project.webp" alt="Project interface" /> -->
+            <div class="showcase-ph" aria-hidden="true">
+              <div class="ph-side">
+                <span class="ph-line w70"></span>
+                <span class="ph-line w50"></span>
+                <span class="ph-line w60 lime"></span>
+                <span class="ph-line w40"></span>
+                <span class="ph-line w55"></span>
+              </div>
+              <div class="ph-main">
+                <div class="ph-plot">
+                  <span style="--h:42%"></span><span style="--h:66%"></span><span style="--h:38%"></span>
+                  <span style="--h:80%" class="lime"></span><span style="--h:54%"></span><span style="--h:72%"></span>
+                  <span style="--h:30%"></span><span style="--h:60%"></span><span style="--h:88%" class="lime"></span>
+                  <span style="--h:46%"></span><span style="--h:70%"></span><span style="--h:34%"></span>
+                </div>
+                <div class="ph-rows">
+                  <span class="ph-line w80"></span>
+                  <span class="ph-line w65"></span>
+                  <span class="ph-line w90"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -259,6 +300,7 @@
 
     <!-- ───────── CONTACT ───────── -->
     <section class="block" id="contact">
+      <div class="aurora" aria-hidden="true"><span></span><span></span></div>
       <p class="block-label"><span class="idx">07</span> Contact</p>
       <div class="block-body">
         <p class="contact-lede">Open to research, engineering, and a good problem.</p>
@@ -278,7 +320,6 @@
     <span class="footer-meta"><span id="updated">Updated Jun 2026</span> · © <span id="year"></span> Zach Krivis</span>
   </footer>
 
-  <script type="module" src="js/wave.js"></script>
   <script type="module" src="js/site.js"></script>
 </body>
 </html>

@@ -1,10 +1,12 @@
 /* ============================================================
    Zach Krivis.
-   Editorial, high-contrast, type-driven. No cards, no glass
-   panels, no ambient gradients. Hierarchy comes from type,
-   strict alignment, hairline rules, and whitespace. Lime is a
-   sparse accent only. Built to be fast: flat paint, no canvas,
-   transform/opacity motion, no web fonts.
+   Editorial, high-contrast, type-driven. Hierarchy comes from
+   type, strict alignment, hairline rules, and whitespace. Lime is
+   the sparse accent. Built to be fast: flat paint, no web fonts,
+   transform/opacity motion. The only color washes are two quiet,
+   contained CSS effects — a brief intro fade (ColorBends) and an
+   aurora confined to the Contact section — both off on reduced
+   motion and simplified on mobile.
    ============================================================ */
 
 :root {
@@ -263,10 +265,98 @@ body.show-grid .grid-overlay { display: flex; }
    v7 additions — a few precise, on-theme flourishes.
    ============================================================ */
 
-/* ---------- hero waveform ---------- */
-.wave-wrap { margin-top: clamp(34px, 6vh, 60px); }
-#wave { display: block; width: 100%; height: 84px; }
-@media (max-width: 560px) { #wave { height: 56px; } }
+/* ---------- intro color-bends (brief, fast fade on open) ---------- */
+.intro-bends {
+  position: fixed; inset: 0; z-index: 200; pointer-events: none; opacity: 0;
+  background:
+    linear-gradient(105deg,
+      rgba(99, 102, 241, 0.85) 0%,
+      rgba(59, 130, 246, 0.6) 28%,
+      rgba(10, 10, 10, 0) 54%,
+      rgba(124, 255, 103, 0.55) 86%);
+  transform: scale(1.08);
+  animation: introBends 1100ms var(--ease) forwards;
+}
+@keyframes introBends {
+  0%   { opacity: 0; transform: scale(1.12) translateY(-1%); }
+  16%  { opacity: 0.7; }
+  100% { opacity: 0; transform: scale(1) translateY(0); }
+}
+
+/* ---------- showcase (scroll-tilt reveal) ---------- */
+.showcase { padding: clamp(28px, 6vh, 72px) 0 clamp(36px, 8vh, 96px); }
+.showcase-kicker {
+  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--accent); margin: 0 0 12px;
+}
+.showcase-title {
+  font-size: clamp(1.5rem, 3.4vw, 2.4rem); font-weight: 600;
+  letter-spacing: -0.03em; margin: 0; max-width: 18ch;
+}
+.showcase-stage { perspective: 1400px; margin-top: clamp(28px, 5vh, 52px); }
+.showcase-frame {
+  transform-origin: 50% 0%; will-change: transform;
+  border: 1px solid var(--line-2); border-radius: 16px;
+  background: #131313; padding: 10px;
+  box-shadow: 0 30px 70px -28px rgba(0, 0, 0, 0.75);
+}
+.showcase-bar {
+  display: flex; align-items: center; gap: 7px; padding: 6px 8px 12px;
+}
+.dotmac { width: 9px; height: 9px; border-radius: 50%; background: var(--line-2); flex: none; }
+.showcase-tab { margin-left: 12px; font-size: 11px; color: var(--faint); }
+.showcase-screen {
+  position: relative; overflow: hidden; border-radius: 9px;
+  border: 1px solid var(--line); background: #0c0c0c; aspect-ratio: 16 / 9;
+}
+.showcase-screen img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: left top; }
+/* placeholder interface mock (swap for a screenshot) */
+.showcase-ph { position: absolute; inset: 0; display: flex; gap: 0; }
+.ph-side {
+  flex: none; width: clamp(110px, 22%, 200px); padding: clamp(14px, 2.4vw, 26px) clamp(12px, 1.8vw, 20px);
+  display: flex; flex-direction: column; gap: 12px; border-right: 1px solid var(--line);
+}
+.ph-main { flex: 1; min-width: 0; padding: clamp(14px, 2.4vw, 28px); display: flex; flex-direction: column; gap: clamp(16px, 3vh, 28px); }
+.ph-line { height: 8px; border-radius: 3px; background: var(--line-2); display: block; }
+.ph-line.lime { background: rgba(200, 241, 53, 0.45); }
+.w40 { width: 40%; } .w50 { width: 50%; } .w55 { width: 55%; }
+.w60 { width: 60%; } .w65 { width: 65%; } .w70 { width: 70%; }
+.w80 { width: 80%; } .w90 { width: 90%; }
+.ph-plot { flex: 1; min-height: 0; display: flex; align-items: flex-end; gap: clamp(4px, 1vw, 10px); }
+.ph-plot span { flex: 1; height: var(--h); background: var(--line-2); border-radius: 2px 2px 0 0; }
+.ph-plot span.lime { background: rgba(200, 241, 53, 0.5); }
+.ph-rows { display: flex; flex-direction: column; gap: 10px; }
+@media (max-width: 560px) {
+  .showcase-frame { border-radius: 12px; padding: 7px; }
+  .showcase-screen { aspect-ratio: 4 / 3; }
+  .ph-side { display: none; }
+}
+
+/* ---------- aurora (contact background only) ---------- */
+#contact { position: relative; isolation: isolate; }
+.aurora { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; opacity: 0.42; }
+.aurora span {
+  position: absolute; border-radius: 50%; filter: blur(52px); opacity: 0.8;
+  will-change: transform;
+}
+.aurora span:nth-child(1) {
+  width: 60%; height: 150%; left: -8%; top: -55%;
+  background: radial-gradient(closest-side, rgba(99, 102, 241, 0.9), rgba(99, 102, 241, 0) 72%);
+  animation: auroraA 16s var(--ease) infinite alternate;
+}
+.aurora span:nth-child(2) {
+  width: 65%; height: 150%; right: -10%; top: -50%;
+  background: radial-gradient(closest-side, rgba(16, 185, 129, 0.7), rgba(59, 130, 246, 0) 70%);
+  animation: auroraB 20s var(--ease) infinite alternate;
+}
+@keyframes auroraA { from { transform: translateX(-6%) translateY(2%); } to { transform: translateX(14%) translateY(-4%); } }
+@keyframes auroraB { from { transform: translateX(8%) translateY(-3%); } to { transform: translateX(-12%) translateY(3%); } }
+@media (max-width: 760px) {
+  .aurora { opacity: 0.3; }
+  .aurora span { filter: blur(38px); animation: none; }
+  .aurora span:nth-child(1) { transform: translateX(2%); }
+  .aurora span:nth-child(2) { transform: translateX(-2%); }
+}
 
 /* ---------- directional link underlines (origin set in JS) ---------- */
 .nav-links a::after, .link::after { transform-origin: var(--uo, left); }
@@ -331,5 +421,9 @@ body.show-grid .grid-overlay { display: flex; }
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .dot { animation: none; }
+  .intro-bends { display: none; }          /* skip the intro flash entirely */
+  .showcase-frame { transform: none; }     /* no scroll tilt; show flat */
+  .aurora { opacity: 0.28; }               /* static, no drift */
+  .aurora span { animation: none; }
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
