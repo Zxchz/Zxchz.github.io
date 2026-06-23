@@ -166,4 +166,60 @@ window.addEventListener("keydown", (e) => {
   else kp = 0;
 });
 
-console.log("%cBuilt by hand. Try ⌘K, or the Konami code.", "color:#c8f135;font-family:monospace");
+/* ---------- active section (scrollspy) ---------- */
+const navMap = new Map();
+document.querySelectorAll(".nav-links a").forEach((a) => {
+  const href = a.getAttribute("href") || "";
+  if (href.startsWith("#") && href.length > 1) navMap.set(href.slice(1), a);
+});
+const spySections = [...navMap.keys()].map((id) => document.getElementById(id)).filter(Boolean);
+if (spySections.length && "IntersectionObserver" in window) {
+  let current = null;
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      if (current) navMap.get(current)?.classList.remove("active");
+      current = e.target.id;
+      navMap.get(current)?.classList.add("active");
+    });
+  }, { rootMargin: "-50% 0px -45% 0px", threshold: 0 });
+  spySections.forEach((s) => spy.observe(s));
+}
+
+/* ---------- keyboard chord nav: press g, then a section key ---------- */
+const CHORD = { h: "#top", a: "#about", e: "#work", p: "#projects", w: "#writing", d: "#education", s: "#skills", c: "#contact" };
+const hint = document.createElement("div");
+hint.className = "chord-hint";
+hint.setAttribute("aria-hidden", "true");
+hint.innerHTML =
+  '<span><kbd>a</kbd>about</span><span><kbd>e</kbd>exp</span><span><kbd>p</kbd>projects</span>' +
+  '<span><kbd>w</kbd>writing</span><span><kbd>s</kbd>skills</span><span><kbd>c</kbd>contact</span>';
+document.body.appendChild(hint);
+let armed = false, chordTimer = 0;
+const disarm = () => { armed = false; hint.classList.remove("show"); clearTimeout(chordTimer); };
+window.addEventListener("keydown", (e) => {
+  const tag = (e.target.tagName || "").toLowerCase();
+  if (tag === "input" || tag === "textarea" || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (kbar.classList.contains("open")) return;
+  const k = e.key.toLowerCase();
+  if (!armed) {
+    if (k === "g") { armed = true; hint.classList.add("show"); clearTimeout(chordTimer); chordTimer = setTimeout(disarm, 1600); }
+    return;
+  }
+  if (CHORD[k]) { e.preventDefault(); goto(CHORD[k]); }
+  disarm();
+});
+
+/* ---------- directional link underlines ---------- */
+if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  const side = (el, e) => {
+    const r = el.getBoundingClientRect();
+    el.style.setProperty("--uo", e.clientX - r.left < r.width / 2 ? "left" : "right");
+  };
+  document.querySelectorAll(".link, .nav-links a").forEach((el) => {
+    el.addEventListener("pointerenter", (e) => side(el, e));
+    el.addEventListener("pointerleave", (e) => side(el, e));
+  });
+}
+
+console.log("%cBuilt by hand. Try ⌘K, press g then a section key, or the Konami code.", "color:#c8f135;font-family:monospace");

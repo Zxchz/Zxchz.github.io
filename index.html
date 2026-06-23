@@ -51,6 +51,9 @@
         <li>C++</li>
         <li>Writer</li>
       </ul>
+      <div class="wave-wrap reveal" data-reveal>
+        <canvas id="wave" aria-hidden="true"></canvas>
+      </div>
     </section>
 
     <!-- ───────── ABOUT ───────── -->
@@ -92,6 +95,7 @@
               internal representations actually carry the signal, then prune aggressively to see
               what survives. Writeup in progress and under review.
             </p>
+            <p class="row-extra"><b>Stack</b> PyTorch · activation probing · structured + magnitude pruning</p>
           </li>
 
           <li class="row reveal" data-reveal>
@@ -104,6 +108,7 @@
               Working with the IT infrastructure team on the systems that keep a hospital network
               running, across software infrastructure and enterprise information technology.
             </p>
+            <p class="row-extra"><b>Focus</b> Enterprise IT · network infrastructure · hospital systems</p>
           </li>
 
           <li class="row reveal" data-reveal>
@@ -117,6 +122,7 @@
               VR sessions on the Oculus Quest 2, and built training modules that measurably
               improved digital confidence over six months.
             </p>
+            <p class="row-extra"><b>Tools</b> Oculus Quest 2 · device support · training modules</p>
           </li>
 
           <li class="row row-min reveal" data-reveal>
@@ -147,6 +153,7 @@
               Finding the representations that matter inside audio foundation models, pruning the
               rest, and measuring how much you can take away before the model notices. Under review.
             </p>
+            <p class="row-extra"><b>Stack</b> PyTorch · probing · activation patching · structured sparsity</p>
           </li>
 
           <li class="row reveal" data-reveal>
@@ -160,6 +167,7 @@
               arms, and a servo arm flips it back off in about 50 milliseconds. Firmware in C++ on
               a microcontroller. It does nothing, precisely.
             </p>
+            <p class="row-extra"><b>Build</b> C++ firmware · RFID · servo arm · ~50 ms off-time · built in 24h</p>
             <div class="row-foot">
               <button class="toggle" id="useless" aria-label="Demo toggle">
                 <span class="toggle-track"><span class="toggle-knob"></span></span>
@@ -192,6 +200,7 @@
               2-sigma problem, and the case for integration over prohibition.
             </p>
             <div class="row-foot"><a class="link" href="https://docs.google.com/document/d/1xBlzbU96j7mIDcMmMZtc3y_ZjaAd_-wIiEKwWAHl_uI/edit?usp=sharing" target="_blank" rel="noopener">Read the essay ↗</a></div>
+            <aside class="sidenote"><b>Aside</b> Bloom's 2-sigma problem (1984): one-on-one tutored students outperform 98% of a conventional classroom.</aside>
           </li>
 
           <li class="row reveal" data-reveal>
@@ -207,6 +216,7 @@
               quantum compute would mean for medicine, cryptography, and physics.
             </p>
             <div class="row-foot"><a class="link" href="https://docs.google.com/document/d/1a6uny6BQTbIv3HxHEq4DkyFYHz4SQ1a6bkcKBE0TlxY/edit?usp=sharing" target="_blank" rel="noopener">Read the essay ↗</a></div>
+            <aside class="sidenote"><b>Aside</b> Majorana 1 is Microsoft's topological qubit chip; PsiQuantum is pursuing a photonic path to the same scale.</aside>
           </li>
 
         </ul>
@@ -264,9 +274,11 @@
 
   <footer class="wrap footer">
     <span>Cleveland, Ohio</span>
+    <a class="link footer-src" href="https://github.com/Zxchz/zxchz.github.io" target="_blank" rel="noopener">Hand-built, no framework — view source ↗</a>
     <span>© <span id="year"></span> Zach Krivis</span>
   </footer>
 
+  <script type="module" src="js/wave.js"></script>
   <script type="module" src="js/site.js"></script>
 </body>
 </html>
