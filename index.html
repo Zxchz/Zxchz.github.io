@@ -3,314 +3,121 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zachary Krivis — Machine Learning Researcher</title>
+  <title>Zachary Krivis</title>
 
-  <meta name="description" content="Zachary Krivis — machine learning researcher working on audio foundation models, interpretability, and efficient model architectures. Hackathon winner, science-fair laureate, Class of 2027." />
+  <meta name="description" content="Zachary Krivis — machine learning researcher working on audio foundation models and interpretability." />
   <meta name="author" content="Zachary Krivis" />
-  <meta name="theme-color" content="#07090c" />
+  <meta name="theme-color" content="#0a0a0b" />
 
-  <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Zachary Krivis — Machine Learning Researcher" />
-  <meta property="og:description" content="Audio foundation models, interpretability, and efficient architectures. Hackathon winner and science-fair laureate, Class of 2027." />
+  <meta property="og:title" content="Zachary Krivis" />
+  <meta property="og:description" content="I teach machines to listen — then take them apart to see how they hear." />
   <meta property="og:url" content="https://zxchz.github.io/" />
-  <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <!-- Scroll progress -->
-  <div class="scroll-progress" aria-hidden="true"><span id="progress-bar"></span></div>
-
-  <!-- WebGL particle field -->
   <canvas id="field" aria-hidden="true"></canvas>
-  <div class="field-veil" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
 
-  <!-- Fixed chrome -->
   <header class="topbar">
-    <a href="#top" class="brand">
-      <span class="brand-mark">ZK</span>
-      <span class="brand-name">Zachary Krivis</span>
-    </a>
-    <nav class="nav" aria-label="Primary">
-      <a href="#research">Research</a>
-      <a href="#work">Work</a>
-      <a href="#education">Education</a>
-      <a href="#contact">Contact</a>
-    </nav>
+    <a href="#top" class="mark">Zachary Krivis</a>
+    <a href="#contact" class="mark mark--end">Contact</a>
   </header>
 
-  <aside class="side-rail side-rail--left" aria-hidden="true">
-    <span class="rail-label">Solon, OH — USA</span>
-  </aside>
-  <aside class="side-rail side-rail--right" aria-hidden="true">
-    <span class="rail-label">Class of 2027 · est. signal</span>
-  </aside>
-
   <main id="top">
-    <!-- ───────────────────────── HERO ───────────────────────── -->
-    <section class="hero" id="hero">
-      <div class="hero-inner">
-        <p class="eyebrow reveal" data-reveal>// machine learning researcher</p>
-        <h1 class="hero-title reveal" data-reveal>
-          <span class="line">Listening to the</span>
-          <span class="line">inside of <em>audio</em></span>
-          <span class="line">foundation models.</span>
-        </h1>
-        <p class="hero-lede reveal" data-reveal>
-          I’m <strong>Zachary Krivis</strong> — a researcher probing how large audio
-          and language models think, then making them leaner. I work on interpretability,
-          neuron-level pruning, and architectural efficiency.
-        </p>
-        <div class="hero-actions reveal" data-reveal>
-          <a class="btn btn--primary" href="#work">View the work</a>
-          <a class="btn btn--ghost" href="#contact">Get in touch</a>
-        </div>
-      </div>
-      <div class="hero-scroll reveal" data-reveal aria-hidden="true">
-        <span>scroll</span>
-        <span class="hero-scroll__line"></span>
-      </div>
+
+    <!-- ───────── HERO ───────── -->
+    <section class="hero">
+      <p class="kicker reveal" data-reveal>Zachary Krivis</p>
+      <h1 class="hero-line reveal" data-reveal>
+        I teach machines to <em>listen</em>, then take them apart to see how they hear.
+      </h1>
+      <p class="hero-sub reveal" data-reveal>Machine&nbsp;learning research — audio foundation models</p>
     </section>
 
-    <!-- ───────────────────────── ABOUT ───────────────────────── -->
-    <section class="section section--about" id="about">
-      <header class="section-head">
-        <span class="section-index">01</span>
-        <h2 class="section-title reveal" data-reveal>Signal over noise.</h2>
-      </header>
-      <div class="about-grid">
-        <p class="about-lead reveal" data-reveal>
-          I’m a high-school researcher who treats curiosity like an experiment —
-          form a hypothesis, build the rig, measure honestly.
-        </p>
-        <div class="about-body reveal" data-reveal>
-          <p>
-            My current focus is <strong>audio foundation models</strong>: figuring out
-            which neurons actually matter, and pruning the rest without losing the music.
-            Along the way I’ve won a hackathon for a deliberately useless box, written
-            an award-recognized essay on million-qubit quantum machines, and spent a
-            year and a half testing 3D-printing substrates for civil engineering.
-          </p>
-          <p>
-            I like problems that sit between hardware and theory — where you can
-            measure a result in milliseconds and still argue about what it means.
-          </p>
-          <ul class="stat-row">
-            <li><span class="stat-num">4</span><span class="stat-label">languages shipped</span></li>
-            <li><span class="stat-num">16+</span><span class="stat-label">science-fair trials</span></li>
-            <li><span class="stat-num">1st</span><span class="stat-label">hackathon place</span></li>
-          </ul>
-        </div>
-      </div>
+    <!-- ───────── ABOUT ───────── -->
+    <section class="about" id="about">
+      <p class="lede reveal" data-reveal>
+        I work on <em>audio foundation models</em> — the neural networks that turn sound
+        into understanding. Most of my time goes to interpretability: opening these models
+        up, finding the few neurons that actually carry the signal, and cutting away the rest.
+      </p>
+      <p class="lede lede--quiet reveal" data-reveal>
+        I like problems wedged between hardware and theory. I’m still in high school.
+      </p>
     </section>
 
-    <!-- ───────────────────────── RESEARCH ───────────────────────── -->
-    <section class="section section--research" id="research">
-      <header class="section-head">
-        <span class="section-index">02</span>
-        <h2 class="section-title reveal" data-reveal>Research</h2>
-      </header>
-
-      <article class="entry reveal" data-reveal>
-        <div class="entry-meta">
-          <span class="entry-date">Jan 2026 — Present</span>
-          <span class="entry-tag">Audio foundation models</span>
-        </div>
-        <div class="entry-main">
-          <h3 class="entry-title">Machine Learning Researcher</h3>
-          <p class="entry-org">Algoverse AI Research</p>
-          <ul class="entry-points">
-            <li>Researching <strong>audio foundation models (AFMs)</strong>, improving efficiency by importing architectural techniques from large language models.</li>
-            <li>Using an LLM interpretability method — the <strong>LLM Transparency Tool</strong> — to inspect neuron weights inside AFMs and guide structured pruning.</li>
-            <li>Collaborating with a team of four and a mentor through multiple meetings a week and daily async communication.</li>
-          </ul>
-          <ul class="chip-row">
-            <li>PyTorch</li><li>Interpretability</li><li>Model pruning</li><li>Audio ML</li>
-          </ul>
-        </div>
-      </article>
-    </section>
-
-    <!-- ───────────────────────── WORK / ACHIEVEMENTS ───────────────────────── -->
-    <section class="section section--work" id="work">
-      <header class="section-head">
-        <span class="section-index">03</span>
-        <h2 class="section-title reveal" data-reveal>Selected work</h2>
-      </header>
-
-      <div class="work-grid">
-        <!-- Useless Button -->
-        <article class="card card--feature reveal" data-reveal>
-          <div class="card-top">
-            <span class="card-kicker">Hackathon · 1st place</span>
-            <span class="card-year">Mar 2025</span>
-          </div>
-          <h3 class="card-title">The Useless Button</h3>
-          <p class="card-org">Scrapyard Cleveland — Hack Club</p>
-          <p class="card-desc">
-            A hardware homage to the classic “useless box”: tap an RFID tag and a
-            button springs to life, only for an animated arrow to slap it back off
-            within a second. Won first place against a rigorous field for its take
-            on interactive electronics and creative automation.
-          </p>
-          <ul class="card-specs">
-            <li><span>Brain</span>Arduino Mega 2560</li>
-            <li><span>Sense</span>MFRC522 RFID · &lt;50&nbsp;ms detect</li>
-            <li><span>Show</span>16×2 LCD · 2-step animation</li>
-          </ul>
-          <a class="card-link" href="https://github.com/Zxchz/uselessButton" target="_blank" rel="noopener">
-            github.com/Zxchz/uselessButton ↗
+    <!-- ───────── WORK ───────── -->
+    <section class="work" id="work">
+      <p class="label reveal" data-reveal>Selected work</p>
+      <ul class="work-list">
+        <li class="work-item reveal" data-reveal>
+          <a class="work-row" href="#work" aria-disabled="true">
+            <span class="work-title">Audio foundation models</span>
+            <span class="work-where">Algoverse AI Research</span>
+            <span class="work-year">2026—</span>
           </a>
-        </article>
+          <p class="work-note">Researching which neurons inside large audio models actually matter — then pruning the rest without losing the meaning.</p>
+        </li>
 
-        <!-- Quantum essay -->
-        <article class="card reveal" data-reveal>
-          <div class="card-top">
-            <span class="card-kicker">Essay · Rising Scholars Award</span>
-            <span class="card-year">Jan 2026</span>
-          </div>
-          <h3 class="card-title">A Million Noiseless Qubits</h3>
-          <p class="card-org">Lumiere Scholars Essay Contest</p>
-          <p class="card-desc">
-            An essay on the future of quantum computing — recognized by an Oxford
-            professor — analyzing what a million error-free qubits could mean for
-            medicine, cryptography, and physics, and synthesizing hardware
-            breakthroughs from Microsoft, IBM, and Google into a timeline for
-            fault-tolerant machines.
-          </p>
-          <ul class="chip-row">
-            <li>Quantum</li><li>Research writing</li><li>Forecasting</li>
-          </ul>
-        </article>
+        <li class="work-item reveal" data-reveal>
+          <a class="work-row" href="https://github.com/Zxchz/uselessButton" target="_blank" rel="noopener">
+            <span class="work-title">The Useless Button</span>
+            <span class="work-where">1st place · Scrapyard Cleveland</span>
+            <span class="work-year">2025</span>
+          </a>
+          <p class="work-note">A button engineered to refuse to stay pressed. Tap an RFID tag, it springs to life — and an arrow slaps it back off within a second. <span class="work-link">github.com/Zxchz/uselessButton ↗</span></p>
+        </li>
 
-        <!-- Science day -->
-        <article class="card reveal" data-reveal>
-          <div class="card-top">
-            <span class="card-kicker">Science Day · Multiple awards</span>
-            <span class="card-year">May 2026</span>
-          </div>
-          <h3 class="card-title">3D-Printing Substrates for Civil Engineering</h3>
-          <p class="card-org">Ohio Academy of Science — State Science Day</p>
-          <p class="card-desc">
-            16+ trials comparing PLA, PETG, photopolymer resin, and wood-infused PLA
-            for durability, flexibility, and structural integrity — delivered through
-            six-plus presentations to STEM professionals.
-          </p>
-          <ul class="award-list">
-            <li>Dr. Lynn E. Elfner Young Scientist Award</li>
-            <li>Thermo Fisher Scientific Junior Innovators Award</li>
-            <li>ASCE Third Place Award</li>
-            <li>Contributed to the Harold C. Shaw Outstanding School Award</li>
-          </ul>
-        </article>
+        <li class="work-item reveal" data-reveal>
+          <a class="work-row" href="#work" aria-disabled="true">
+            <span class="work-title">A Million Noiseless Qubits</span>
+            <span class="work-where">Rising Scholars Award</span>
+            <span class="work-year">2026</span>
+          </a>
+          <p class="work-note">An essay on what quantum computing becomes once the noise is gone — recognized by an Oxford professor.</p>
+        </li>
+
+        <li class="work-item reveal" data-reveal>
+          <a class="work-row" href="#work" aria-disabled="true">
+            <span class="work-title">Printing stronger structures</span>
+            <span class="work-where">Young Scientist Award · State Science Day</span>
+            <span class="work-year">2026</span>
+          </a>
+          <p class="work-note">A study of how different 3D-printing materials hold up under load — and which ones belong in real structures.</p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ───────── CONTACT ───────── -->
+    <section class="contact" id="contact">
+      <p class="label reveal" data-reveal>Elsewhere</p>
+      <h2 class="contact-head reveal" data-reveal>Say hello.</h2>
+      <a class="contact-email reveal" data-reveal href="mailto:zach.krivis@gmail.com">zach.krivis@gmail.com</a>
+      <div class="contact-links reveal" data-reveal>
+        <a href="https://github.com/Zxchz" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/zachary-krivis-947406309" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </section>
 
-    <!-- ───────────────────────── EDUCATION ───────────────────────── -->
-    <section class="section section--education" id="education">
-      <header class="section-head">
-        <span class="section-index">04</span>
-        <h2 class="section-title reveal" data-reveal>Education</h2>
-      </header>
-
-      <article class="entry reveal" data-reveal>
-        <div class="entry-meta">
-          <span class="entry-date">Class of 2027</span>
-          <span class="entry-tag">3.71 GPA</span>
-        </div>
-        <div class="entry-main">
-          <h3 class="entry-title">Solon High School</h3>
-          <p class="entry-org">Solon, OH</p>
-
-          <h4 class="entry-sub">Coursework</h4>
-          <ul class="chip-row chip-row--wrap">
-            <li>AP Computer Science A</li><li>C++</li><li>App Development</li>
-            <li>AP Calculus AB</li><li>AP Physics 1</li><li>Honors Precalculus</li>
-            <li>AP US History</li><li>AP Environmental Science</li>
-            <li>AP English Lang &amp; Comp</li>
-          </ul>
-
-          <h4 class="entry-sub">Beyond the classroom</h4>
-          <ul class="entry-points entry-points--two">
-            <li>Solon Codes — 3 years</li>
-            <li>Concert Band — 7 years · Marching Band — 3 years</li>
-            <li>JV Cross Country &amp; Indoor/Outdoor Track — 4 years</li>
-            <li>Solon Education TV — 4 years (directing &amp; camera)</li>
-            <li>Model United Nations — 1 year</li>
-            <li>Ski &amp; Snowboard Club — 3 years</li>
-          </ul>
-        </div>
-      </article>
-    </section>
-
-    <!-- ───────────────────────── SKILLS ───────────────────────── -->
-    <section class="section section--skills" id="skills">
-      <header class="section-head">
-        <span class="section-index">05</span>
-        <h2 class="section-title reveal" data-reveal>Toolkit</h2>
-      </header>
-      <div class="skills-grid">
-        <div class="skills-col reveal" data-reveal>
-          <h3 class="skills-label">Languages</h3>
-          <ul class="skills-list">
-            <li>Java</li><li>Python</li><li>C++</li><li>Lua</li>
-          </ul>
-        </div>
-        <div class="skills-col reveal" data-reveal>
-          <h3 class="skills-label">Developer tools</h3>
-          <ul class="skills-list">
-            <li>GitHub</li><li>VS Code</li><li>Visual Studio</li>
-            <li>CLion</li><li>IntelliJ IDEA</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- ───────────────────────── CONTACT ───────────────────────── -->
-    <section class="section section--contact" id="contact">
-      <header class="section-head">
-        <span class="section-index">06</span>
-        <h2 class="section-title reveal" data-reveal>Let’s talk</h2>
-      </header>
-      <div class="contact-body">
-        <p class="contact-lead reveal" data-reveal>
-          Open to research collaborations, internships, and good problems.
-          The fastest way to reach me is email.
-        </p>
-        <a class="contact-email reveal" data-reveal href="mailto:zach.krivis@gmail.com">
-          zach.krivis@gmail.com
-        </a>
-        <ul class="contact-links reveal" data-reveal>
-          <li><a href="https://www.linkedin.com/in/zachary-krivis-947406309" target="_blank" rel="noopener">LinkedIn ↗</a></li>
-          <li><a href="https://github.com/Zxchz" target="_blank" rel="noopener">GitHub ↗</a></li>
-        </ul>
-      </div>
-    </section>
   </main>
 
   <footer class="footer">
-    <span>© <span id="year"></span> Zachary Krivis</span>
-    <span class="footer-note">Built with three.js — designed, not generated.</span>
+    <span>Solon, Ohio</span>
+    <span>© <span id="year"></span></span>
   </footer>
 
-  <!-- UI runs on its own; the 3D field is isolated so it can never block content -->
   <script type="module" src="js/ui.js"></script>
-
-  <!-- three.js is vendored locally (no runtime CDN dependency) -->
   <script type="importmap">
-  {
-    "imports": {
-      "three": "./js/three.module.js"
-    }
-  }
+  { "imports": { "three": "./js/three.module.js" } }
   </script>
   <script type="module" src="js/field.js"></script>
 </body>
