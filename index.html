@@ -3,122 +3,149 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zachary Krivis</title>
+  <title>Zach Krivis</title>
 
-  <meta name="description" content="Zachary Krivis — machine learning researcher working on audio foundation models and interpretability." />
-  <meta name="author" content="Zachary Krivis" />
-  <meta name="theme-color" content="#0a0a0b" />
+  <meta name="description" content="Zach Krivis — 16, taking neural networks apart to see what they're actually doing. Audio model interpretability, and hardware that probably shouldn't exist." />
+  <meta name="author" content="Zach Krivis" />
+  <meta name="theme-color" content="#0b0b0c" />
 
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Zachary Krivis" />
-  <meta property="og:description" content="I teach machines to listen — then take them apart to see how they hear." />
+  <meta property="og:title" content="Zach Krivis" />
+  <meta property="og:description" content="I take neural networks apart to see what they're actually doing." />
   <meta property="og:url" content="https://zxchz.github.io/" />
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <canvas id="field" aria-hidden="true"></canvas>
   <div class="grain" aria-hidden="true"></div>
-  <div class="vignette" aria-hidden="true"></div>
+  <div class="cursor-dot" aria-hidden="true"></div>
 
   <header class="topbar">
-    <a href="#top" class="mark">Zachary Krivis</a>
-    <a href="#contact" class="mark mark--end">Contact</a>
+    <a href="#top" class="mono-link" data-magnetic>ZACH KRIVIS</a>
+    <button class="kbar-hint" id="kbar-open" data-magnetic aria-label="Open command menu">
+      <span class="kbd">⌘</span><span class="kbd">K</span>
+      <span class="kbar-hint-text">look around</span>
+    </button>
   </header>
 
   <main id="top">
 
     <!-- ───────── HERO ───────── -->
     <section class="hero">
-      <p class="kicker reveal" data-reveal>Zachary Krivis</p>
-      <h1 class="hero-line reveal" data-reveal>
-        I teach machines to <em>listen</em>, then take them apart to see how they hear.
-      </h1>
-      <p class="hero-sub reveal" data-reveal>Machine&nbsp;learning research — audio foundation models</p>
+      <p class="status reveal" data-reveal>
+        <span class="dot"></span> Solon, Ohio · 16 · currently awake
+      </p>
+      <h1 class="name" data-scramble>ZACH KRIVIS</h1>
+      <p class="tagline reveal" data-reveal>
+        I take neural networks apart to figure out what they’re <em>actually</em> doing.
+        Lately that means audio models. I also build hardware that probably shouldn’t exist.
+      </p>
+      <button class="ghost-btn reveal" data-reveal data-magnetic id="kbar-open-2">
+        Press <span class="kbd">⌘</span><span class="kbd">K</span> to look around
+      </button>
     </section>
 
     <!-- ───────── ABOUT ───────── -->
-    <section class="about" id="about">
-      <p class="lede reveal" data-reveal>
-        I work on <em>audio foundation models</em> — the neural networks that turn sound
-        into understanding. Most of my time goes to interpretability: opening these models
-        up, finding the few neurons that actually carry the signal, and cutting away the rest.
-      </p>
-      <p class="lede lede--quiet reveal" data-reveal>
-        I like problems wedged between hardware and theory. I’m still in high school.
-      </p>
+    <section class="block" id="about">
+      <p class="tag reveal" data-reveal>// about</p>
+      <div class="prose">
+        <p class="reveal" data-reveal>
+          I’m sixteen and mostly obsessed with what’s going on <em>inside</em> neural networks —
+          which units fire, which representations actually matter, and how much you can rip out
+          before the whole thing stops working.
+        </p>
+        <p class="reveal" data-reveal>
+          Right now that’s audio foundation models: interpretability and structured sparsity,
+          probing internal activations to find the signal hiding under the noise. A couple of
+          writeups are under review at workshops — <span class="accent-text">results pending</span>.
+        </p>
+        <p class="reveal" data-reveal>
+          When I’m not doing that I’m building hardware, usually things with no practical purpose
+          whatsoever. It’s more fun than it sounds.
+        </p>
+      </div>
     </section>
 
-    <!-- ───────── WORK ───────── -->
-    <section class="work" id="work">
-      <p class="label reveal" data-reveal>Selected work</p>
-      <ul class="work-list">
-        <li class="work-item reveal" data-reveal>
-          <a class="work-row" href="#work" aria-disabled="true">
-            <span class="work-title">Audio foundation models</span>
-            <span class="work-where">Algoverse AI Research</span>
-            <span class="work-year">2026—</span>
-          </a>
-          <p class="work-note">Researching which neurons inside large audio models actually matter — then pruning the rest without losing the meaning.</p>
+    <!-- ───────── BUILD LOG ───────── -->
+    <section class="block" id="work">
+      <p class="tag reveal" data-reveal>// build log</p>
+      <ul class="log">
+
+        <li class="log-item reveal" data-reveal>
+          <div class="log-head">
+            <span class="log-title">The Useless Button</span>
+            <span class="log-year">2025</span>
+          </div>
+          <p class="log-where">1st place · Scrapyard Cleveland</p>
+          <p class="log-note">
+            A box whose entire job is to turn itself off. Tap an RFID tag, a button comes alive,
+            and an animated arrow slaps it back off in about 50&nbsp;ms. It won a hackathon, somehow.
+          </p>
+          <div class="useless-wrap">
+            <button class="useless" id="useless" data-magnetic aria-label="A useless button">
+              <span class="useless-track"><span class="useless-knob"></span></span>
+              <span class="useless-label">press me</span>
+            </button>
+            <a class="inline-link" href="https://github.com/Zxchz/uselessButton" target="_blank" rel="noopener">source ↗</a>
+          </div>
         </li>
 
-        <li class="work-item reveal" data-reveal>
-          <a class="work-row" href="https://github.com/Zxchz/uselessButton" target="_blank" rel="noopener">
-            <span class="work-title">The Useless Button</span>
-            <span class="work-where">1st place · Scrapyard Cleveland</span>
-            <span class="work-year">2025</span>
-          </a>
-          <p class="work-note">A button engineered to refuse to stay pressed. Tap an RFID tag, it springs to life — and an arrow slaps it back off within a second. <span class="work-link">github.com/Zxchz/uselessButton ↗</span></p>
+        <li class="log-item reveal" data-reveal>
+          <div class="log-head">
+            <span class="log-title">Audio model interpretability</span>
+            <span class="log-year">2026—</span>
+          </div>
+          <p class="log-where">Algoverse AI Research</p>
+          <p class="log-note">
+            Interpretability and structured sparsity on audio foundation models — locating the
+            internal representations that carry the signal, and what survives when you prune the
+            rest. <span class="accent-text">Under review @ workshops.</span>
+          </p>
         </li>
 
-        <li class="work-item reveal" data-reveal>
-          <a class="work-row" href="#work" aria-disabled="true">
-            <span class="work-title">A Million Noiseless Qubits</span>
-            <span class="work-where">Rising Scholars Award</span>
-            <span class="work-year">2026</span>
-          </a>
-          <p class="work-note">An essay on what quantum computing becomes once the noise is gone — recognized by an Oxford professor.</p>
+        <li class="log-item reveal" data-reveal>
+          <div class="log-head">
+            <span class="log-title">A Million Noiseless Qubits</span>
+            <span class="log-year">2026</span>
+          </div>
+          <p class="log-where">Rising Scholars Award</p>
+          <p class="log-note">
+            An essay on what quantum computing turns into once you delete the noise — a million
+            error-free qubits and what they’d break. An Oxford professor liked it.
+          </p>
         </li>
 
-        <li class="work-item reveal" data-reveal>
-          <a class="work-row" href="#work" aria-disabled="true">
-            <span class="work-title">Printing stronger structures</span>
-            <span class="work-where">Young Scientist Award · State Science Day</span>
-            <span class="work-year">2026</span>
-          </a>
-          <p class="work-note">A study of how different 3D-printing materials hold up under load — and which ones belong in real structures.</p>
-        </li>
       </ul>
     </section>
 
     <!-- ───────── CONTACT ───────── -->
-    <section class="contact" id="contact">
-      <p class="label reveal" data-reveal>Elsewhere</p>
-      <h2 class="contact-head reveal" data-reveal>Say hello.</h2>
-      <a class="contact-email reveal" data-reveal href="mailto:zach.krivis@gmail.com">zach.krivis@gmail.com</a>
-      <div class="contact-links reveal" data-reveal>
-        <a href="https://github.com/Zxchz" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://www.linkedin.com/in/zachary-krivis-947406309" target="_blank" rel="noopener">LinkedIn</a>
+    <section class="block contact" id="contact">
+      <p class="tag reveal" data-reveal>// say hi</p>
+      <p class="contact-line reveal" data-reveal>
+        Always up for research, weird hardware, or a good problem.
+      </p>
+      <a class="email reveal" data-reveal data-magnetic href="mailto:zach.krivis@gmail.com">zach.krivis@gmail.com</a>
+      <div class="socials reveal" data-reveal>
+        <a href="https://github.com/Zxchz" target="_blank" rel="noopener" data-magnetic>GitHub</a>
+        <a href="https://www.linkedin.com/in/zachary-krivis-947406309" target="_blank" rel="noopener" data-magnetic>LinkedIn</a>
       </div>
     </section>
 
   </main>
 
   <footer class="footer">
-    <span>Solon, Ohio</span>
+    <span>Built by hand · no templates</span>
     <span>© <span id="year"></span></span>
   </footer>
 
-  <script type="module" src="js/ui.js"></script>
-  <script type="importmap">
-  { "imports": { "three": "./js/three.module.js" } }
-  </script>
   <script type="module" src="js/field.js"></script>
+  <script type="module" src="js/site.js"></script>
 </body>
 </html>
