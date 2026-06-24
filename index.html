@@ -15,9 +15,10 @@
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="css/style.css" />
+  <!-- Mark JS available before paint so scrubbed reveals start hidden (no FOUC). -->
+  <script>document.documentElement.className += " js";</script>
 </head>
 <body>
-  <div class="intro-bends" id="intro-bends" aria-hidden="true"></div>
   <div class="grid-overlay" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
 
   <!-- ───────── NAV ───────── -->
@@ -36,82 +37,48 @@
     </div>
   </header>
 
-  <main id="top" class="wrap">
-
-    <!-- ───────── HERO ───────── -->
-    <section class="hero">
-      <p class="status reveal" data-reveal><span class="dot"></span> Available · Cleveland, OH</p>
-      <h1 class="title" id="hero-name" data-scramble>Zach Krivis<span class="period">.</span></h1>
-      <p class="hero-lede reveal" data-reveal>
-        I research machine learning, build software close to the metal, and write about
-        where the technology is heading.
-      </p>
-      <ul class="hero-meta reveal" data-reveal>
-        <li>ML Researcher</li>
-        <li>Audio Models</li>
-        <li>C++</li>
-        <li>Writer</li>
-      </ul>
-    </section>
-
-    <!-- ───────── SHOWCASE (scroll reveal) ───────── -->
-    <section class="showcase" id="showcase" aria-label="Selected interfaces">
-      <div class="showcase-head reveal" data-reveal>
-        <p class="showcase-kicker mono">Selected work</p>
-        <h2 class="showcase-title">Built to be looked at closely.</h2>
-      </div>
-      <div class="showcase-stage">
-        <div class="showcase-frame" data-tilt>
-          <div class="showcase-bar" aria-hidden="true">
-            <span class="dotmac"></span><span class="dotmac"></span><span class="dotmac"></span>
-            <span class="showcase-tab mono">interpretability.ipynb</span>
-          </div>
-          <div class="showcase-screen">
-            <!-- Placeholder framing a real project interface.
-                 Swap the .showcase-ph block for a screenshot, e.g.:
-                 <img src="assets/project.webp" alt="Project interface" /> -->
-            <div class="showcase-ph" aria-hidden="true">
-              <div class="ph-side">
-                <span class="ph-line w70"></span>
-                <span class="ph-line w50"></span>
-                <span class="ph-line w60 lime"></span>
-                <span class="ph-line w40"></span>
-                <span class="ph-line w55"></span>
-              </div>
-              <div class="ph-main">
-                <div class="ph-plot">
-                  <span style="--h:42%"></span><span style="--h:66%"></span><span style="--h:38%"></span>
-                  <span style="--h:80%" class="lime"></span><span style="--h:54%"></span><span style="--h:72%"></span>
-                  <span style="--h:30%"></span><span style="--h:60%"></span><span style="--h:88%" class="lime"></span>
-                  <span style="--h:46%"></span><span style="--h:70%"></span><span style="--h:34%"></span>
-                </div>
-                <div class="ph-rows">
-                  <span class="ph-line w80"></span>
-                  <span class="ph-line w65"></span>
-                  <span class="ph-line w90"></span>
-                </div>
-              </div>
-            </div>
-          </div>
+  <!-- ───────── HERO (pinned + scroll-scrubbed) ───────── -->
+  <section class="hero" id="top">
+    <div class="hero-pin">
+      <div class="hero-sticky">
+        <!-- ColorBends background — hero only -->
+        <div class="hero-bg" aria-hidden="true"><canvas id="cb"></canvas></div>
+        <div class="wrap hero-inner">
+          <p class="status" data-h="status"><span class="dot"></span> Available · Cleveland, OH</p>
+          <h1 class="title" id="hero-name" data-h="title">Zach Krivis<span class="period">.</span></h1>
+          <p class="hero-lede" data-h="lede">
+            I research machine learning, build software close to the metal, and write about
+            where the technology is heading.
+          </p>
+          <ul class="hero-meta" data-h="meta">
+            <li>ML Researcher</li>
+            <li>Audio Models</li>
+            <li>C++</li>
+            <li>Writer</li>
+          </ul>
         </div>
+        <div class="hero-cue" data-h="cue" aria-hidden="true"><span>Scroll</span><i></i></div>
       </div>
-    </section>
+    </div>
+  </section>
+
+  <main class="wrap">
 
     <!-- ───────── ABOUT ───────── -->
     <section class="block" id="about">
-      <p class="block-label"><span class="idx">01</span> About</p>
+      <p class="block-label" data-reveal><span class="idx">01</span> About</p>
       <div class="block-body">
-        <p class="lead">
-          I am a high school student in Cleveland, Ohio who got into machine learning and software
+        <p class="lead" data-reveal>
+          I'm a high school student in Cleveland, Ohio who got into machine learning and software
           the way most people fall into a hobby that quietly takes over. Most of what I know came
           from building things, breaking them, and figuring out why.
         </p>
-        <p class="dim">
-          Lately that means interpretability research on audio foundation models, low level work
-          in C++, and the occasional essay when an idea will not leave me alone. I like problems
+        <p class="dim" data-reveal>
+          Lately that means interpretability research on audio foundation models, low-level work
+          in C++, and the occasional essay when an idea won't leave me alone. I like problems
           that are technically hard and actually useful.
         </p>
-        <ul class="figures" data-stats>
+        <ul class="figures" data-stats data-reveal>
           <li><span class="fig" data-count="50" data-suffix="+">0</span> people taught tech</li>
           <li><span class="fig" data-count="1" data-prefix="#">0</span> hackathon finish</li>
           <li><span class="fig" data-count="2">0</span> essays published</li>
@@ -121,14 +88,14 @@
 
     <!-- ───────── WORK / EXPERIENCE ───────── -->
     <section class="block" id="work">
-      <p class="block-label"><span class="idx">02</span> Experience</p>
+      <p class="block-label" data-reveal><span class="idx">02</span> Experience</p>
       <div class="block-body">
         <ul class="rows">
 
-          <li class="row reveal" data-reveal>
+          <li class="row" data-reveal>
             <div class="row-head">
               <h3 class="row-role">Machine Learning Researcher</h3>
-              <span class="row-date">2026 - Present</span>
+              <span class="row-date">2026 — Present</span>
             </div>
             <p class="row-org">With a research team · Remote</p>
             <p class="row-desc">
@@ -139,10 +106,10 @@
             <p class="row-extra"><b>Stack</b> PyTorch · activation probing · structured + magnitude pruning</p>
           </li>
 
-          <li class="row reveal" data-reveal>
+          <li class="row" data-reveal>
             <div class="row-head">
               <h3 class="row-role">Information Technology Intern</h3>
-              <span class="row-date">2026 - Present</span>
+              <span class="row-date">2026 — Present</span>
             </div>
             <p class="row-org">Cleveland Clinic · On-site</p>
             <p class="row-desc">
@@ -152,24 +119,24 @@
             <p class="row-extra"><b>Focus</b> Enterprise IT · network infrastructure · hospital systems</p>
           </li>
 
-          <li class="row reveal" data-reveal>
+          <li class="row" data-reveal>
             <div class="row-head">
               <h3 class="row-role">Technology Assistant</h3>
-              <span class="row-date">2022 - 2023</span>
+              <span class="row-date">2022 — 2023</span>
             </div>
             <p class="row-org">Solon Senior Center · Part-time</p>
             <p class="row-desc">
-              Supported 50 plus seniors across phones, laptops, and car infotainment systems, ran
+              Supported 50-plus seniors across phones, laptops, and car infotainment systems, ran
               VR sessions on the Oculus Quest 2, and built training modules that measurably
               improved digital confidence over six months.
             </p>
             <p class="row-extra"><b>Tools</b> Oculus Quest 2 · device support · training modules</p>
           </li>
 
-          <li class="row row-min reveal" data-reveal>
+          <li class="row row-min" data-reveal>
             <div class="row-head">
               <h3 class="row-role">Team Member <span class="aside">and yes, I scoop ice cream</span></h3>
-              <span class="row-date">2025 - Present</span>
+              <span class="row-date">2025 — Present</span>
             </div>
             <p class="row-org">Mitchell's Ice Cream</p>
           </li>
@@ -180,11 +147,11 @@
 
     <!-- ───────── PROJECTS ───────── -->
     <section class="block" id="projects">
-      <p class="block-label"><span class="idx">03</span> Projects</p>
+      <p class="block-label" data-reveal><span class="idx">03</span> Projects</p>
       <div class="block-body">
         <ul class="rows">
 
-          <li class="row reveal" data-reveal>
+          <li class="row" data-reveal>
             <div class="row-head">
               <h3 class="row-role">Audio Model Interpretability</h3>
               <span class="row-date">Ongoing</span>
@@ -197,7 +164,7 @@
             <p class="row-extra"><b>Stack</b> PyTorch · probing · activation patching · structured sparsity</p>
           </li>
 
-          <li class="row reveal" data-reveal>
+          <li class="row" data-reveal>
             <div class="row-head">
               <h3 class="row-role">The Useless Button</h3>
               <span class="row-date">2025</span>
@@ -224,11 +191,11 @@
 
     <!-- ───────── WRITING ───────── -->
     <section class="block" id="writing">
-      <p class="block-label"><span class="idx">04</span> Writing</p>
+      <p class="block-label" data-reveal><span class="idx">04</span> Writing</p>
       <div class="block-body">
         <ul class="rows">
 
-          <li class="row reveal" data-reveal>
+          <li class="row" data-reveal>
             <div class="row-head">
               <h3 class="row-role">The Misdiagnosis</h3>
               <span class="row-date">2025</span>
@@ -236,15 +203,15 @@
             <p class="row-org">On how schools respond to AI</p>
             <blockquote class="pull">A 70% flag from a probabilistic classifier is a hypothesis, not a finding.</blockquote>
             <p class="row-desc">
-              An argument that the most important effect of generative AI on education is not the
-              technology, it is how institutions react to it. Detector false positives, Bloom's
+              An argument that the most important effect of generative AI on education isn't the
+              technology — it's how institutions react to it. Detector false positives, Bloom's
               2-sigma problem, and the case for integration over prohibition.
             </p>
             <div class="row-foot"><a class="link" href="https://docs.google.com/document/d/1xBlzbU96j7mIDcMmMZtc3y_ZjaAd_-wIiEKwWAHl_uI/edit?usp=sharing" target="_blank" rel="noopener">Read the essay ↗</a></div>
             <aside class="sidenote"><b>Aside</b> Bloom's 2-sigma problem (1984): one-on-one tutored students outperform 98% of a conventional classroom.</aside>
           </li>
 
-          <li class="row reveal" data-reveal>
+          <li class="row" data-reveal>
             <div class="row-head">
               <h3 class="row-role">A Million Noiseless Qubits</h3>
               <span class="row-date">2026</span>
@@ -266,14 +233,14 @@
 
     <!-- ───────── EDUCATION ───────── -->
     <section class="block" id="education">
-      <p class="block-label"><span class="idx">05</span> Education</p>
+      <p class="block-label" data-reveal><span class="idx">05</span> Education</p>
       <div class="block-body">
-        <div class="row-head">
+        <div class="row-head" data-reveal>
           <h3 class="row-role">Solon High School</h3>
-          <span class="row-date">2023 - 2027</span>
+          <span class="row-date">2023 — 2027</span>
         </div>
-        <p class="row-org">Senior · Class of 2027</p>
-        <ul class="inline-list">
+        <p class="row-org" data-reveal>Senior · Class of 2027</p>
+        <ul class="inline-list" data-reveal>
           <li>AP Computer Science A</li>
           <li>AP Calculus AB</li>
           <li>AP Physics 1</li>
@@ -288,24 +255,25 @@
 
     <!-- ───────── SKILLS ───────── -->
     <section class="block" id="skills">
-      <p class="block-label"><span class="idx">06</span> Skills</p>
+      <p class="block-label" data-reveal><span class="idx">06</span> Skills</p>
       <div class="block-body">
         <dl class="defs">
-          <div><dt>Research</dt><dd>Interpretability, Structured Sparsity, Audio Models, Neural Networks, Applied ML, LLMs</dd></div>
-          <div><dt>Engineering</dt><dd>C++, Software Infrastructure, IT Infrastructure, Computer Information Systems</dd></div>
-          <div><dt>Working style</dt><dd>Teamwork, Leadership</dd></div>
+          <div data-reveal><dt>Research</dt><dd>Interpretability, structured sparsity, audio models, neural networks, applied ML, LLMs</dd></div>
+          <div data-reveal><dt>Engineering</dt><dd>C++, software infrastructure, IT infrastructure, computer information systems</dd></div>
+          <div data-reveal><dt>Working style</dt><dd>Teamwork, leadership</dd></div>
         </dl>
       </div>
     </section>
 
     <!-- ───────── CONTACT ───────── -->
     <section class="block" id="contact">
-      <div class="aurora" aria-hidden="true"><span></span><span></span></div>
-      <p class="block-label"><span class="idx">07</span> Contact</p>
+      <!-- Aurora background — contact only -->
+      <div class="aurora-bg" aria-hidden="true"><canvas id="au"></canvas></div>
+      <p class="block-label" data-reveal><span class="idx">07</span> Contact</p>
       <div class="block-body">
-        <p class="contact-lede">Open to research, engineering, and a good problem.</p>
-        <a class="contact-email" href="mailto:zach.krivis@gmail.com">zach.krivis@gmail.com</a>
-        <ul class="inline-list links-list">
+        <p class="contact-lede" data-reveal>Open to research, engineering, and a good problem.</p>
+        <a class="contact-email" href="mailto:zach.krivis@gmail.com" data-reveal>zach.krivis@gmail.com</a>
+        <ul class="inline-list links-list" data-reveal>
           <li><a class="link" href="https://github.com/Zxchz" target="_blank" rel="noopener">GitHub ↗</a></li>
           <li><a class="link" href="https://www.linkedin.com/in/zachary-krivis-947406309" target="_blank" rel="noopener">LinkedIn ↗</a></li>
         </ul>
@@ -320,6 +288,7 @@
     <span class="footer-meta"><span id="updated">Updated Jun 2026</span> · © <span id="year"></span> Zach Krivis</span>
   </footer>
 
+  <script type="module" src="js/bg.js"></script>
   <script type="module" src="js/site.js"></script>
 </body>
 </html>

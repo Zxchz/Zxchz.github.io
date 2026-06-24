@@ -1,41 +1,85 @@
 /* ============================================================
-   Interaction layer. Deliberately small and cheap.
-   No canvas, no per-frame cursor loop, no magnetic transforms.
-   Just: scroll reveals, stat count-ups, a quick name decode,
-   the Useless Button demo, a command palette, the showcase
-   scroll-tilt, and two quiet easter eggs (Konami + grid).
-   Motion is transform / opacity only and everything runs on
-   demand — the scroll driver is gated to when the showcase is
-   actually on screen.
+   Interaction layer. Deliberately small and cheap. Motion is
+   transform / opacity only, driven directly by scroll position
+   (no scroll hijacking, no heavy libraries):
+     - hero pin: title/lede/meta scale + fade, scrubbed by scroll
+     - content reveals: lightweight scroll-linked opacity/translate
+   Plus: stat count-ups, name decode, the Useless Button demo, a
+   command palette, scrollspy, chord nav, and two easter eggs.
    ============================================================ */
 
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-/* ---------- intro color-bends: drop the node once it has faded ---------- */
-const introBends = document.getElementById("intro-bends");
-if (introBends) {
-  if (reduce) introBends.remove();
-  else introBends.addEventListener("animationend", () => introBends.remove(), { once: true });
-}
+const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+const seg = (p, a, b) => clamp((p - a) / (b - a), 0, 1);
 
 const yEl = document.getElementById("year");
 if (yEl) yEl.textContent = new Date().getFullYear();
 
-/* ---------- reveal on scroll ---------- */
-const revealEls = document.querySelectorAll("[data-reveal]");
-if ("IntersectionObserver" in window && !reduce) {
+/* ---------- hero pin: scroll-scrubbed unpack ---------- */
+const heroPin = document.querySelector(".hero-pin");
+const heroEls = [...document.querySelectorAll("[data-h]")];
+if (heroPin && heroEls.length && !reduce) {
+  let ticking = false;
+  function renderHero() {
+    ticking = false;
+    const vh = window.innerHeight;
+    const rect = heroPin.getBoundingClientRect();
+    const total = heroPin.offsetHeight - vh;
+    const p = total > 0 ? clamp(-rect.top / total, 0, 1) : 0;
+    for (const el of heroEls) {
+      let o = 1, ty = 0, sc = 1;
+      switch (el.dataset.h) {
+        case "status": { const out = seg(p, 0, 0.12); o = 1 - out; ty = -out * 26; break; }
+        case "title":  { const out = seg(p, 0.30, 0.62); o = 1 - out; ty = -p * 68 - out * 36; sc = 1 + p * 0.10; break; }
+        case "lede":   { const out = seg(p, 0.12, 0.42); o = 1 - out; ty = -out * 50 - p * 10; break; }
+        case "meta":   { const out = seg(p, 0.22, 0.50); o = 1 - out; ty = -out * 50 - p * 14; break; }
+        case "cue":    { o = 1 - seg(p, 0, 0.08); break; }
+      }
+      el.style.opacity = o.toFixed(3);
+      el.style.transform = `translate3d(0, ${ty.toFixed(1)}px, 0) scale(${sc.toFixed(4)})`;
+    }
+  }
+  const onHero = () => { if (!ticking) { ticking = true; requestAnimationFrame(renderHero); } };
+  window.addEventListener("scroll", onHero, { passive: true });
+  window.addEventListener("resize", onHero, { passive: true });
+  renderHero();
+}
+
+/* ---------- content reveals: scroll-linked (scrubbed, not CSS transitions) ---------- */
+const revealEls = [...document.querySelectorAll("[data-reveal]")];
+if (reduce || !("IntersectionObserver" in window)) {
+  revealEls.forEach((el) => { el.style.opacity = "1"; el.style.transform = "none"; });
+} else {
+  const active = new Set();
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
-      if (!e.isIntersecting) return;
-      const sibs = [...e.target.parentElement.querySelectorAll(":scope > [data-reveal]")];
-      e.target.style.transitionDelay = Math.min(Math.max(0, sibs.indexOf(e.target)) * 50, 200) + "ms";
-      e.target.classList.add("is-visible");
-      io.unobserve(e.target);
+      if (e.isIntersecting) active.add(e.target);
+      else {
+        // left the top already revealed -> pin to final state; left the bottom -> keep hidden
+        if (e.boundingClientRect.top < 0) { e.target.style.opacity = "1"; e.target.style.transform = "none"; }
+        active.delete(e.target);
+      }
     });
-  }, { threshold: 0.15, rootMargin: "0px 0px -6% 0px" });
+    if (active.size) onReveal();
+  }, { threshold: 0, rootMargin: "0px 0px -8% 0px" });
   revealEls.forEach((el) => io.observe(el));
-} else {
-  revealEls.forEach((el) => el.classList.add("is-visible"));
+
+  let ticking = false;
+  function renderReveal() {
+    ticking = false;
+    const vh = window.innerHeight;
+    active.forEach((el) => {
+      const r = el.getBoundingClientRect();
+      const p = clamp((vh - r.top) / (vh * 0.26), 0, 1);
+      el.style.opacity = p.toFixed(3);
+      el.style.transform = `translate3d(0, ${((1 - p) * 18).toFixed(1)}px, 0)`;
+      if (p >= 1) { el.style.opacity = "1"; el.style.transform = "none"; active.delete(el); io.unobserve(el); }
+    });
+  }
+  const onReveal = () => { if (!ticking) { ticking = true; requestAnimationFrame(renderReveal); } };
+  window.addEventListener("scroll", onReveal, { passive: true });
+  window.addEventListener("resize", onReveal, { passive: true });
+  renderReveal();
 }
 
 /* ---------- stat count-ups ---------- */
@@ -82,9 +126,8 @@ function scramble(el, text) {
 }
 const heroName = document.getElementById("hero-name");
 if (heroName && !reduce) {
-  // preserve the trailing lime period (separate span)
   const base = "Zach Krivis";
-  setTimeout(() => scramble(heroName, base), 140);
+  setTimeout(() => scramble(heroName, base), 180);
   heroName.style.cursor = "pointer";
   heroName.addEventListener("click", () => scramble(heroName, base));
 }
@@ -131,41 +174,41 @@ kbar.innerHTML = `<div class="kbar-panel" role="dialog" aria-label="Command menu
 document.body.appendChild(kbar);
 const input = kbar.querySelector(".kbar-input");
 const list = kbar.querySelector(".kbar-list");
-let active = 0, filtered = COMMANDS.slice();
+let activeCmd = 0, filtered = COMMANDS.slice();
 
 function renderRows() {
   list.innerHTML = "";
   if (!filtered.length) { list.innerHTML = `<div class="kbar-empty">No matches.</div>`; return; }
   filtered.forEach((c, i) => {
     const row = document.createElement("div");
-    row.className = "kbar-row" + (i === active ? " active" : "");
+    row.className = "kbar-row" + (i === activeCmd ? " active" : "");
     row.innerHTML = `<span class="k-label">${c.label}</span><span class="k-hint">${c.hint}</span>`;
     row.addEventListener("click", () => run(i));
-    row.addEventListener("pointermove", () => { active = i; paint(); });
+    row.addEventListener("pointermove", () => { activeCmd = i; paint(); });
     list.appendChild(row);
   });
 }
-const paint = () => [...list.children].forEach((c, i) => c.classList.toggle("active", i === active));
-function open() { kbar.classList.add("open"); input.value = ""; filtered = COMMANDS.slice(); active = 0; renderRows(); setTimeout(() => input.focus(), 30); }
-function close() { kbar.classList.remove("open"); }
-function run(i = active) { const c = filtered[i]; close(); if (c) setTimeout(c.run, 90); }
+const paint = () => [...list.children].forEach((c, i) => c.classList.toggle("active", i === activeCmd));
+function openBar() { kbar.classList.add("open"); input.value = ""; filtered = COMMANDS.slice(); activeCmd = 0; renderRows(); setTimeout(() => input.focus(), 30); }
+function closeBar() { kbar.classList.remove("open"); }
+function run(i = activeCmd) { const c = filtered[i]; closeBar(); if (c) setTimeout(c.run, 90); }
 
 input.addEventListener("input", () => {
   const q = input.value.toLowerCase().trim();
   filtered = COMMANDS.filter((c) => (c.label + " " + c.hint).toLowerCase().includes(q));
-  active = 0; renderRows();
+  activeCmd = 0; renderRows();
 });
 input.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowDown") { e.preventDefault(); active = Math.min(active + 1, filtered.length - 1); paint(); }
-  else if (e.key === "ArrowUp") { e.preventDefault(); active = Math.max(active - 1, 0); paint(); }
+  if (e.key === "ArrowDown") { e.preventDefault(); activeCmd = Math.min(activeCmd + 1, filtered.length - 1); paint(); }
+  else if (e.key === "ArrowUp") { e.preventDefault(); activeCmd = Math.max(activeCmd - 1, 0); paint(); }
   else if (e.key === "Enter") { e.preventDefault(); run(); }
 });
-kbar.addEventListener("click", (e) => { if (e.target === kbar) close(); });
+kbar.addEventListener("click", (e) => { if (e.target === kbar) closeBar(); });
 window.addEventListener("keydown", (e) => {
-  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); kbar.classList.contains("open") ? close() : open(); }
-  else if (e.key === "Escape") close();
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); kbar.classList.contains("open") ? closeBar() : openBar(); }
+  else if (e.key === "Escape") closeBar();
 });
-document.getElementById("kbar-open")?.addEventListener("click", open);
+document.getElementById("kbar-open")?.addEventListener("click", openBar);
 
 /* ---------- Konami: reveal the grid ---------- */
 const K = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
@@ -242,47 +285,6 @@ if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
     el.addEventListener("pointerenter", (e) => side(el, e));
     el.addEventListener("pointerleave", (e) => side(el, e));
   });
-}
-
-/* ---------- showcase scroll-tilt (Apple-style reveal) ----------
-   A perspective card that starts tilted back and flattens as it
-   scrolls into view. Passive scroll + rAF, gated by an observer
-   so it costs nothing when off screen. Gentler on mobile; off
-   under reduced motion (CSS already renders it flat).            */
-const tilt = document.querySelector("[data-tilt]");
-if (tilt && !reduce) {
-  const stage = tilt.closest(".showcase-stage") || tilt;
-  const mqMobile = window.matchMedia("(max-width: 768px)");
-  const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
-  const lerp = (a, b, t) => a + (b - a) * t;
-  let ticking = false;
-
-  function update() {
-    ticking = false;
-    const r = stage.getBoundingClientRect();
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-    // 0 as the stage enters from the bottom, 1 once it has settled near the top
-    const p = clamp((vh - r.top) / (vh * 0.85), 0, 1);
-    const m = mqMobile.matches;
-    const rot = lerp(m ? 8 : 16, 0, p);
-    const scl = lerp(m ? 0.97 : 0.94, 1, p);
-    tilt.style.transform = `rotateX(${rot.toFixed(2)}deg) scale(${scl.toFixed(4)})`;
-  }
-  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
-
-  if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) { window.addEventListener("scroll", onScroll, { passive: true }); update(); }
-        else window.removeEventListener("scroll", onScroll);
-      });
-    }, { rootMargin: "120px 0px 120px 0px" });
-    io.observe(stage);
-  } else {
-    window.addEventListener("scroll", onScroll, { passive: true });
-  }
-  window.addEventListener("resize", onScroll, { passive: true });
-  update();
 }
 
 console.log("%cBuilt by hand. Try ⌘K, press g then a section key, or the Konami code.", "color:#c8f135;font-family:monospace");
