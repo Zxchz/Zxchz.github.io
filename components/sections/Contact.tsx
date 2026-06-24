@@ -2,6 +2,13 @@
 
 import { type RefObject } from "react";
 import dynamic from "next/dynamic";
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useReducedMotion,
+} from "framer-motion";
 import { PlainSection } from "@/components/PlainSection";
 import { CardInner, Item } from "@/components/StackCard";
 import { EMAIL, GITHUB, LINKEDIN } from "@/lib/data";
@@ -13,6 +20,23 @@ const Aurora = dynamic(
 );
 
 export function Contact({ sectionRef }: { sectionRef: RefObject<HTMLElement | null> }) {
+  const reduce = useReducedMotion();
+
+  // As the finale rises over the last card, drift the aurora up a touch — a
+  // soft parallax so the section settles into place instead of snapping in.
+  const { scrollYProgress } = useScroll({
+    target: sectionRef as RefObject<HTMLElement>,
+    offset: ["start end", "start start"],
+  });
+  const p = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 32,
+    mass: 0.55,
+    restDelta: 0.0005,
+  });
+  const auroraYMV = useTransform(p, [0, 1], [56, 0]);
+  const auroraY = reduce ? 0 : auroraYMV;
+
   return (
     <PlainSection
       id="contact"
@@ -20,9 +44,13 @@ export function Contact({ sectionRef }: { sectionRef: RefObject<HTMLElement | nu
       className="z-20 overflow-hidden border-t border-white/[0.08] bg-[#060608]"
     >
       {/* Aurora behind everything (blurred through the glass). */}
-      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(120%_80%_at_50%_16%,rgba(59,130,246,0.14),transparent_70%)]">
+      <motion.div
+        aria-hidden
+        style={{ y: auroraY, willChange: "transform" }}
+        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(120%_80%_at_50%_16%,rgba(59,130,246,0.14),transparent_70%)]"
+      >
         <Aurora className="absolute inset-0" />
-      </div>
+      </motion.div>
 
       <div className="relative z-10">
         <CardInner index="07" label="Contact">

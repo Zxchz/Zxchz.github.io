@@ -1,6 +1,12 @@
 "use client";
 
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useReducedMotion,
+} from "framer-motion";
 import { useEffect, type ReactNode, type RefObject } from "react";
 import { stagger, fadeUp, fadeUpSmall } from "@/lib/animations";
 import { AmbientBackground } from "./AmbientBackground";
@@ -21,9 +27,11 @@ type Props = {
 /**
  * A sticky card in the stack.
  *  - Readability: sticky `top` is derived from the card's own height.
- *  - Cinematic depth: as the next card rises, this card scales to 0.95, dims to
- *    0.5, and rotates back (rotateX -4deg) inside a perspective wrapper —
- *    a physical, recede-into-space parallax.
+ *  - Cinematic depth: as the next card rises, the scroll position is run through
+ *    a spring (so the motion carries weight and momentum instead of tracking the
+ *    scrollbar 1:1), then this card eases back in 3D — scaling down, tilting on
+ *    rotateX, and sinking under a growing shadow veil. It reads like a physical
+ *    card being pushed back into the dark while the next one slides over it.
  * Sticky lives on the outer <section>; the 3D transform lives on an inner layer.
  */
 export function StackCard({
@@ -58,22 +66,41 @@ export function StackCard({
     target: nextRef as RefObject<HTMLElement>,
     offset: ["start end", "start start"],
   });
-  const scaleMV = useTransform(scrollYProgress, [0.1, 1], [1, 0.95]);
-  const opacityMV = useTransform(scrollYProgress, [0.35, 0.95], [1, 0.5]);
-  const rotateMV = useTransform(scrollYProgress, [0.1, 1], [0, -4]);
+
+  // Smooth the raw scroll value so every derived transform inherits a little
+  // inertia — this is what turns a mechanical scrub into a fluid glide.
+  const p = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 32,
+    mass: 0.55,
+    restDelta: 0.0005,
+  });
+
+  const scaleMV = useTransform(p, [0.05, 0.95], [1, 0.93]);
+  const opacityMV = useTransform(p, [0.5, 1], [1, 0.72]);
+  const rotateMV = useTransform(p, [0.05, 0.95], [0, -6]);
+  const veilMV = useTransform(p, [0.15, 1], [0, 0.5]);
+
   const scale = reduce ? 1 : scaleMV;
   const opacity = reduce ? 1 : opacityMV;
   const rotateX = reduce ? 0 : rotateMV;
+  const veil = reduce ? 0 : veilMV;
 
   return (
     <section
       ref={cardRef as RefObject<HTMLElement>}
       id={id}
-      style={{ zIndex: z, perspective: "1400px" }}
+      style={{ zIndex: z, perspective: "1600px" }}
       className={`sticky min-h-svh w-full ${className}`}
     >
       <motion.div
-        style={{ scale, opacity, rotateX, transformOrigin: "center top" }}
+        style={{
+          scale,
+          opacity,
+          rotateX,
+          transformOrigin: "center top",
+          willChange: "transform, opacity",
+        }}
         className={`relative min-h-svh overflow-hidden rounded-t-[28px] border-t border-white/[0.05] shadow-[0_-30px_60px_rgba(0,0,0,0.55)] ${bg}`}
         variants={stagger}
         initial="hidden"
@@ -82,6 +109,12 @@ export function StackCard({
       >
         <AmbientBackground color={light} />
         <div className="relative z-10">{children}</div>
+        {/* Depth veil: the card darkens into shadow as it is pushed back. */}
+        <motion.div
+          aria-hidden
+          style={{ opacity: veil }}
+          className="pointer-events-none absolute inset-0 z-20 bg-black"
+        />
       </motion.div>
     </section>
   );

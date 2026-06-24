@@ -1,6 +1,12 @@
 "use client";
 
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useReducedMotion,
+} from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 
@@ -37,13 +43,22 @@ export function Hero() {
     offset: ["start start", "end start"],
   });
 
-  const oStatus = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
-  const yTitle = useTransform(scrollYProgress, [0, 1], [0, -60]);
-  const oTitle = useTransform(scrollYProgress, [0.3, 0.62], [1, 0]);
-  const oLede = useTransform(scrollYProgress, [0.12, 0.42], [1, 0]);
-  const yLede = useTransform(scrollYProgress, [0.12, 0.42], [0, -40]);
-  const oMeta = useTransform(scrollYProgress, [0.22, 0.5], [1, 0]);
-  const oCue = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
+  // Spring-smoothed scroll so the hero exits with the same fluid inertia the
+  // card stack uses — the whole page shares one motion language.
+  const p = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 32,
+    mass: 0.55,
+    restDelta: 0.0005,
+  });
+
+  const oStatus = useTransform(p, [0, 0.12], [1, 0]);
+  const yTitle = useTransform(p, [0, 1], [0, -60]);
+  const oTitle = useTransform(p, [0.3, 0.62], [1, 0]);
+  const oLede = useTransform(p, [0.12, 0.42], [1, 0]);
+  const yLede = useTransform(p, [0.12, 0.42], [0, -40]);
+  const oMeta = useTransform(p, [0.22, 0.5], [1, 0]);
+  const oCue = useTransform(p, [0, 0.08], [1, 0]);
 
   const s = (style: object) => (reduce ? undefined : style);
 
