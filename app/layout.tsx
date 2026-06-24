@@ -8,7 +8,13 @@ export const metadata: Metadata = {
   description:
     "Zach Krivis — machine learning researcher and software developer in Cleveland, Ohio. Audio foundation model research, high-performance infrastructure, and writing on AI and quantum computing.",
   authors: [{ name: "Zach Krivis" }],
-  icons: { icon: "/favicon.svg" },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
   openGraph: {
     title: "Zach Krivis",
     description: "Machine learning research, software, and writing.",
