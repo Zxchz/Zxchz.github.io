@@ -36,6 +36,7 @@ uniform float uNoise;
 uniform int uIterations;
 uniform float uIntensity;
 uniform float uBandWidth;
+uniform float uAspectX;
 varying vec2 vUv;
 
 void main() {
@@ -43,7 +44,10 @@ void main() {
   vec2 p = vUv * 2.0 - 1.0;
   p += uPointer * uParallax * 0.1;
   vec2 rp = vec2(p.x * uRot.x - p.y * uRot.y, p.x * uRot.y + p.y * uRot.x);
-  vec2 q = vec2(rp.x * (uCanvas.x / uCanvas.y), rp.y);
+  // uAspectX is the horizontal stretch. On landscape it is the true aspect
+  // (uCanvas.x/uCanvas.y); on portrait it is relaxed toward 1.0 so the bands
+  // don't get compressed into thin vertical streaks on phones.
+  vec2 q = vec2(rp.x * uAspectX, rp.y);
   q /= max(uScale, 0.0001);
   q /= 0.5 + 0.2 * dot(q, q);
   q += 0.2 * cos(t) - 7.56;
@@ -200,6 +204,7 @@ export function ColorBends({
         uIterations: { value: 1 },
         uIntensity: { value: intensity },
         uBandWidth: { value: bandWidth },
+        uAspectX: { value: 1 },
       },
     });
 
@@ -217,6 +222,15 @@ export function ColorBends({
       lastH = h;
       renderer.setSize(w, h);
       program.uniforms.uCanvas.value = [w, h];
+
+      // Aspect handling. Landscape keeps the true aspect (desktop is unchanged).
+      // Portrait (phones) relaxes the horizontal stretch toward 1.0 and zooms
+      // the pattern out a touch, so the bands read as broad, flowing curves
+      // instead of thin, compressed vertical streaks.
+      const aspect = w / h;
+      const portrait = h > w;
+      program.uniforms.uAspectX.value = portrait ? 1.0 : aspect;
+      program.uniforms.uScale.value = portrait ? scale * 1.5 : scale;
     };
     const ro = new ResizeObserver(resize);
     ro.observe(ctn);
