@@ -36,6 +36,7 @@ uniform float uNoise;
 uniform int uIterations;
 uniform float uIntensity;
 uniform float uBandWidth;
+uniform float uAspectX;
 varying vec2 vUv;
 
 void main() {
@@ -43,7 +44,10 @@ void main() {
   vec2 p = vUv * 2.0 - 1.0;
   p += uPointer * uParallax * 0.1;
   vec2 rp = vec2(p.x * uRot.x - p.y * uRot.y, p.x * uRot.y + p.y * uRot.x);
-  vec2 q = vec2(rp.x * (uCanvas.x / uCanvas.y), rp.y);
+  // uAspectX is the horizontal stretch. On landscape it is the true aspect
+  // (uCanvas.x/uCanvas.y); on portrait it is relaxed toward 1.0 so the bands
+  // don't get compressed into thin vertical streaks on phones.
+  vec2 q = vec2(rp.x * uAspectX, rp.y);
   q /= max(uScale, 0.0001);
   q /= 0.5 + 0.2 * dot(q, q);
   q += 0.2 * cos(t) - 7.56;
@@ -119,6 +123,9 @@ type Props = {
   frequency?: number;
   bandWidth?: number;
   intensity?: number;
+  /** Exact device pixel dimensions to draw at (full-bleed, no aspect distortion). */
+  width?: number;
+  height?: number;
   className?: string;
 };
 
@@ -130,9 +137,16 @@ export function ColorBends({
   frequency = 1,
   bandWidth = 6,
   intensity = 1,
+  width,
+  height,
   className = "",
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
+  // Live device dimensions read by the render loop (avoids re-init on resize).
+  const dimsRef = useRef({ w: 0, h: 0 });
+  useEffect(() => {
+    dimsRef.current = { w: width ?? 0, h: height ?? 0 };
+  }, [width, height]);
 
   useEffect(() => {
     const ctn = ref.current;
@@ -190,17 +204,33 @@ export function ColorBends({
         uIterations: { value: 1 },
         uIntensity: { value: intensity },
         uBandWidth: { value: bandWidth },
+        uAspectX: { value: 1 },
       },
     });
 
     const mesh = new Mesh(gl, { geometry, program });
     ctn.appendChild(gl.canvas);
 
+    let lastW = 0;
+    let lastH = 0;
     const resize = () => {
-      const w = ctn.offsetWidth;
-      const h = ctn.offsetHeight;
+      // Prefer the exact device dimensions passed in; fall back to the element.
+      const w = dimsRef.current.w || ctn.offsetWidth;
+      const h = dimsRef.current.h || ctn.offsetHeight;
+      if (!w || !h || (w === lastW && h === lastH)) return;
+      lastW = w;
+      lastH = h;
       renderer.setSize(w, h);
       program.uniforms.uCanvas.value = [w, h];
+
+      // Aspect handling. Landscape keeps the true aspect (desktop is unchanged).
+      // Portrait (phones) relaxes the horizontal stretch toward 1.0 and zooms
+      // the pattern out a touch, so the bands read as broad, flowing curves
+      // instead of thin, compressed vertical streaks.
+      const aspect = w / h;
+      const portrait = h > w;
+      program.uniforms.uAspectX.value = portrait ? 1.0 : aspect;
+      program.uniforms.uScale.value = portrait ? scale * 1.5 : scale;
     };
     const ro = new ResizeObserver(resize);
     ro.observe(ctn);
@@ -215,6 +245,7 @@ export function ColorBends({
       if (!last) last = t;
       elapsed += t - last;
       last = t;
+      resize(); // keep the buffer matched to the element — no aspect distortion
       program.uniforms.uTime.value = elapsed * 0.001;
       renderer.render({ scene: mesh });
       raf = requestAnimationFrame(frame);

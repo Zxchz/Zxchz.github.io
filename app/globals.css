@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --accent: #c8f135;
+  --accent: #9fb0c9;
 }
 
 * {
@@ -18,10 +18,8 @@ html {
 }
 
 body {
-  background: #000;
-  color: #f2f2ee;
-  letter-spacing: -0.005em;
-  text-rendering: optimizeLegibility;
+  background: #050506;
+  color: #e7e7ea;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -36,7 +34,7 @@ a {
   color: #000;
 }
 
-/* animated underline used by links / nav */
+/* understated link underline */
 .ulink {
   position: relative;
 }
@@ -47,18 +45,50 @@ a {
   bottom: -2px;
   height: 1px;
   width: 100%;
-  background: var(--accent);
+  background: currentColor;
+  opacity: 0.4;
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.22s cubic-bezier(0.22, 0.7, 0.3, 1);
+  transition: transform 0.25s cubic-bezier(0.22, 0.7, 0.3, 1);
 }
-.ulink:hover::after,
-.ulink[data-active="true"]::after {
+.ulink:hover::after {
   transform: scaleX(1);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Ambient depth: one very slow-moving, deeply desaturated radial spotlight
+   behind the glass cards. No neon, no geometry — just soft obsidian light.
+   ────────────────────────────────────────────────────────────────────────── */
+.ambient-glow {
+  position: absolute;
+  left: 50%;
+  top: -25%;
+  width: 140%;
+  height: 110%;
+  margin-left: -70%;
+  filter: blur(40px);
+  opacity: 0.9;
+  animation: glow-drift 42s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes glow-drift {
+  0% {
+    transform: translate3d(-4%, -2%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, 3%, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-4%, -2%, 0) scale(1);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .ambient-glow {
+    animation: none;
   }
 }

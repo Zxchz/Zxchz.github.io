@@ -1,28 +1,33 @@
 "use client";
 
-import { PlainSection } from "@/components/PlainSection";
-import { CardInner, Item } from "@/components/StackCard";
+import { type RefObject } from "react";
+import { StackCard, CardInner, Item } from "@/components/StackCard";
 import { skills } from "@/lib/data";
 
-export function Skills() {
+const LIGHT = "rgba(46,48,58,0.30)";
+
+type StackProps = {
+  cardRef: RefObject<HTMLElement | null>;
+  nextRef: RefObject<HTMLElement | null>;
+};
+
+export function Skills({ cardRef, nextRef }: StackProps) {
   return (
-    <PlainSection id="skills" className="border-t border-white/[0.09]">
+    <StackCard id="skills" z={16} bg="bg-[#0a0a0c]" light={LIGHT} cardRef={cardRef} nextRef={nextRef}>
       <CardInner index="06" label="Skills">
         <dl className="flex flex-col">
-          {skills.map((s) => (
+          {skills.map((sk) => (
             <Item
               as="div"
-              key={s.label}
-              className="grid gap-1.5 border-b border-white/[0.09] py-[18px] last:border-b-0 md:grid-cols-[160px_1fr] md:gap-5"
+              key={sk.label}
+              className="grid gap-1.5 border-b border-white/[0.08] py-5 last:border-b-0 md:grid-cols-[170px_1fr] md:gap-6"
             >
-              <dt className="font-mono text-xs uppercase tracking-[0.05em] text-faint">
-                {s.label}
-              </dt>
-              <dd className="m-0 text-[#f2f2ee]">{s.value}</dd>
+              <dt className="text-sm font-medium text-zinc-500">{sk.label}</dt>
+              <dd className="m-0 max-w-prose leading-relaxed text-zinc-300">{sk.value}</dd>
             </Item>
           ))}
         </dl>
       </CardInner>
-    </PlainSection>
+    </StackCard>
   );
 }

@@ -5,7 +5,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        accent: "#c8f135",
+        accent: "#9fb0c9",
         muted: "#8c8c85",
         faint: "#585852",
       },
@@ -14,6 +14,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: [
+          "var(--font-geist-sans)",
           "-apple-system",
           "BlinkMacSystemFont",
           '"Segoe UI"',
@@ -24,6 +25,7 @@ const config: Config = {
           "sans-serif",
         ],
         mono: [
+          "var(--font-geist-mono)",
           "ui-monospace",
           '"SF Mono"',
           "SFMono-Regular",

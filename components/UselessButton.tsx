@@ -31,11 +31,11 @@ export function UselessButton() {
       >
         <span
           className={`absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-[2px] transition-all duration-300 ${
-            on ? "left-[25px] bg-accent" : "left-[3px] bg-muted"
+            on ? "left-[25px] bg-accent" : "left-[3px] bg-zinc-500"
           }`}
         />
       </span>
-      <span className="min-w-[5ch] text-left font-mono text-xs text-faint">{label}</span>
+      <span className="min-w-[5ch] text-left text-xs text-zinc-500">{label}</span>
     </button>
   );
 }

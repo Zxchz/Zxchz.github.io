@@ -1,36 +1,56 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useEffect, useRef, type ReactNode } from "react";
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useReducedMotion,
+} from "framer-motion";
+import { useEffect, type ReactNode, type RefObject } from "react";
 import { stagger, fadeUp, fadeUpSmall } from "@/lib/animations";
+import { AmbientBackground } from "./AmbientBackground";
 
 type Props = {
   id?: string;
   z: number;
-  /** Tailwind background + tint classes for this card. */
+  /** Deep, near-black base color for the card (covers the previous card). */
   bg: string;
-  /** First card (hero) skips the card chrome. */
-  first?: boolean;
+  /** Desaturated radial spotlight color for the ambient light behind the glass. */
+  light: string;
+  cardRef: RefObject<HTMLElement | null>;
+  nextRef: RefObject<HTMLElement | null>;
   className?: string;
   children: ReactNode;
 };
 
 /**
- * A sticky "card" in the stack. The next card slides up and covers this one
- * like a deck. Critically, the sticky `top` is computed from the card's own
- * height: short cards pin at the top; cards taller than the viewport pin
- * bottom-aligned only after you've scrolled through all of them — so
- * reading-heavy sections are never covered before they can be read.
+ * A sticky card in the stack.
+ *  - Readability: sticky `top` is derived from the card's own height.
+ *  - Cinematic depth: as the next card rises, the scroll position is run through
+ *    a spring (so the motion carries weight and momentum instead of tracking the
+ *    scrollbar 1:1), then this card eases back in 3D — scaling down, tilting on
+ *    rotateX, and sinking under a growing shadow veil. It reads like a physical
+ *    card being pushed back into the dark while the next one slides over it.
+ * Sticky lives on the outer <section>; the 3D transform lives on an inner layer.
  */
-export function StackCard({ id, z, bg, first = false, className = "", children }: Props) {
-  const ref = useRef<HTMLElement>(null);
+export function StackCard({
+  id,
+  z,
+  bg,
+  light,
+  cardRef,
+  nextRef,
+  className = "",
+  children,
+}: Props) {
+  const reduce = useReducedMotion();
 
   useEffect(() => {
-    const el = ref.current;
+    const el = cardRef.current;
     if (!el) return;
     const setTop = () => {
-      const offset = Math.min(0, window.innerHeight - el.offsetHeight);
-      el.style.top = `${offset}px`;
+      el.style.top = `${Math.min(0, window.innerHeight - el.offsetHeight)}px`;
     };
     setTop();
     const ro = new ResizeObserver(setTop);
@@ -40,29 +60,70 @@ export function StackCard({ id, z, bg, first = false, className = "", children }
       ro.disconnect();
       window.removeEventListener("resize", setTop);
     };
-  }, []);
+  }, [cardRef]);
 
-  const chrome = first
-    ? ""
-    : "rounded-t-[28px] border-t border-white/5 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]";
+  const { scrollYProgress } = useScroll({
+    target: nextRef as RefObject<HTMLElement>,
+    offset: ["start end", "start start"],
+  });
+
+  // Smooth the raw scroll value so every derived transform inherits a little
+  // inertia — this is what turns a mechanical scrub into a fluid glide.
+  const p = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 32,
+    mass: 0.55,
+    restDelta: 0.0005,
+  });
+
+  const scaleMV = useTransform(p, [0.05, 0.95], [1, 0.93]);
+  const opacityMV = useTransform(p, [0.5, 1], [1, 0.72]);
+  const rotateMV = useTransform(p, [0.05, 0.95], [0, -6]);
+  const veilMV = useTransform(p, [0.15, 1], [0, 0.5]);
+
+  const scale = reduce ? 1 : scaleMV;
+  const opacity = reduce ? 1 : opacityMV;
+  const rotateX = reduce ? 0 : rotateMV;
+  const veil = reduce ? 0 : veilMV;
 
   return (
-    <motion.section
-      ref={ref as React.RefObject<HTMLElement>}
+    <section
+      ref={cardRef as RefObject<HTMLElement>}
       id={id}
-      style={{ zIndex: z }}
-      className={`sticky min-h-svh w-full ${bg} ${chrome} ${className}`}
-      variants={stagger}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.18 }}
+      style={{ zIndex: z, perspective: "1600px" }}
+      className={`sticky min-h-svh w-full ${className}`}
     >
-      {children}
-    </motion.section>
+      <motion.div
+        style={{
+          scale,
+          opacity,
+          rotateX,
+          transformOrigin: "center top",
+          willChange: "transform, opacity",
+        }}
+        className={`relative min-h-svh overflow-hidden rounded-t-[28px] border-t border-white/[0.05] shadow-[0_-30px_60px_rgba(0,0,0,0.55)] ${bg}`}
+        variants={stagger}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.18 }}
+      >
+        <AmbientBackground color={light} />
+        <div className="relative z-10">{children}</div>
+        {/* Depth veil: the card darkens into shadow as it is pushed back. */}
+        <motion.div
+          aria-hidden
+          style={{ opacity: veil }}
+          className="pointer-events-none absolute inset-0 z-20 bg-black"
+        />
+      </motion.div>
+    </section>
   );
 }
 
-/** Inner wrapper: the editorial indexed grid (sticky label column + body). */
+/**
+ * Content panel: a genuinely subtle dark-glass card — bg-zinc-950/60, razor-thin
+ * border, backdrop blur — with a small eyebrow and a single readable column.
+ */
 export function CardInner({
   index,
   label,
@@ -73,17 +134,18 @@ export function CardInner({
   children: ReactNode;
 }) {
   return (
-    <div className="mx-auto w-full max-w-wrap px-[clamp(20px,5vw,64px)] py-[clamp(64px,12vh,128px)]">
-      <div className="grid gap-x-[clamp(24px,5vw,64px)] gap-y-4 md:grid-cols-[200px_1fr]">
-        <motion.p
-          variants={fadeUpSmall}
-          className="font-mono text-[13px] tracking-wide text-[#f2f2ee] md:sticky md:top-[84px] md:h-max md:self-start"
-        >
-          <span className="mr-2 text-accent md:mb-2 md:mr-0 md:block">{index}</span>
+    <div className="mx-auto w-full max-w-3xl px-[clamp(18px,5vw,40px)] py-[clamp(76px,14vh,150px)]">
+      <motion.div
+        variants={fadeUpSmall}
+        className="overflow-hidden rounded-3xl border border-white/[0.06] bg-zinc-950/60 p-[clamp(24px,5vw,52px)] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_24px_60px_rgba(0,0,0,0.4)] backdrop-blur-xl"
+      >
+        <p className="mb-8 flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-500">
+          <span className="font-mono tabular-nums text-zinc-400">{index}</span>
+          <span className="h-px w-6 bg-white/15" />
           {label}
-        </motion.p>
-        <div className="min-w-0 max-w-[640px]">{children}</div>
-      </div>
+        </p>
+        {children}
+      </motion.div>
     </div>
   );
 }

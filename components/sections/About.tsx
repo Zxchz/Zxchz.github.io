@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { StackCard, CardInner, Item } from "@/components/StackCard";
 import { fadeUp } from "@/lib/animations";
+
+const LIGHT = "rgba(48,54,74,0.30)";
 
 const stats = [
   { value: 50, suffix: "+", label: "people taught tech" },
@@ -41,7 +43,7 @@ function Counter({ value, prefix = "", suffix = "" }: { value: number; prefix?: 
   }, [value]);
 
   return (
-    <span ref={ref} className="font-sans text-[clamp(2rem,5vw,2.8rem)] font-semibold tracking-[-0.04em] tabular-nums text-[#f2f2ee]">
+    <span ref={ref} className="text-[clamp(2rem,5vw,2.6rem)] font-semibold tracking-[-0.03em] tabular-nums text-zinc-50">
       {prefix}
       {n}
       {suffix}
@@ -49,30 +51,35 @@ function Counter({ value, prefix = "", suffix = "" }: { value: number; prefix?: 
   );
 }
 
-export function About() {
+type StackProps = {
+  cardRef: RefObject<HTMLElement | null>;
+  nextRef: RefObject<HTMLElement | null>;
+};
+
+export function About({ cardRef, nextRef }: StackProps) {
   return (
-    <StackCard id="about" z={10} bg="bg-black">
+    <StackCard id="about" z={11} bg="bg-[#0a0a0c]" light={LIGHT} cardRef={cardRef} nextRef={nextRef}>
       <CardInner index="01" label="About">
-        <Item as="p" className="mb-4 text-[clamp(1.15rem,2vw,1.45rem)] leading-[1.45] tracking-[-0.015em]">
+        <Item as="p" className="max-w-prose text-[clamp(1.15rem,1.9vw,1.4rem)] leading-relaxed text-zinc-200">
           I&apos;m a high school student in Cleveland, Ohio who got into machine
           learning and software the way most people fall into a hobby that
-          quietly takes over. Most of what I know came from building things,
-          breaking them, and figuring out why.
+          quietly takes over.
         </Item>
-        <Item as="p" className="text-[1.02rem] text-muted">
-          Lately that means interpretability research on audio foundation
-          models, low-level work in C++, and the occasional essay when an idea
-          won&apos;t leave me alone. I like problems that are technically hard and
-          actually useful.
+        <Item as="p" className="mt-5 max-w-prose leading-relaxed text-zinc-400">
+          Most of what I know came from building things, breaking them, and
+          figuring out why. Lately that means interpretability research on audio
+          foundation models, low-level performance work, and the occasional
+          essay when an idea won&apos;t leave me alone. I like problems that are
+          technically hard and actually useful.
         </Item>
         <motion.ul
           variants={fadeUp}
-          className="mt-10 flex flex-wrap gap-[clamp(24px,5vw,56px)] border-t border-white/[0.09] pt-7"
+          className="mt-10 flex flex-wrap gap-x-[clamp(24px,5vw,56px)] gap-y-6 border-t border-white/[0.08] pt-8"
         >
-          {stats.map((s) => (
-            <li key={s.label} className="flex flex-col gap-1.5 font-mono text-xs uppercase tracking-[0.04em] text-faint">
-              <Counter value={s.value} prefix={s.prefix} suffix={s.suffix} />
-              {s.label}
+          {stats.map((st) => (
+            <li key={st.label} className="flex flex-col gap-1">
+              <Counter value={st.value} prefix={st.prefix} suffix={st.suffix} />
+              <span className="text-sm text-zinc-500">{st.label}</span>
             </li>
           ))}
         </motion.ul>

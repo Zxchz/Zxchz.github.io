@@ -6,6 +6,11 @@ import { EMAIL, GITHUB, LINKEDIN, ESSAYS } from "@/lib/data";
 
 type Cmd = { label: string; hint: string; run: () => void };
 
+// Open external links safely: noopener,noreferrer prevents the new tab from
+// accessing window.opener (reverse-tabnabbing).
+const openExternal = (url: string) =>
+  window.open(url, "_blank", "noopener,noreferrer");
+
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
@@ -29,17 +34,17 @@ export function CommandPalette() {
         hint: EMAIL,
         run: () => navigator.clipboard?.writeText(EMAIL).catch(() => {}),
       },
-      { label: "GitHub", hint: "↗", run: () => window.open(GITHUB, "_blank") },
-      { label: "LinkedIn", hint: "↗", run: () => window.open(LINKEDIN, "_blank") },
+      { label: "GitHub", hint: "↗", run: () => openExternal(GITHUB) },
+      { label: "LinkedIn", hint: "↗", run: () => openExternal(LINKEDIN) },
       {
         label: "Read: The Misdiagnosis",
         hint: "essay",
-        run: () => window.open(ESSAYS.misdiagnosis, "_blank"),
+        run: () => openExternal(ESSAYS.misdiagnosis),
       },
       {
         label: "Read: A Million Noiseless Qubits",
         hint: "essay",
-        run: () => window.open(ESSAYS.qubits, "_blank"),
+        run: () => openExternal(ESSAYS.qubits),
       },
     ],
     [go]
@@ -121,25 +126,25 @@ export function CommandPalette() {
               }}
               placeholder="Jump to a section or run a command"
               aria-label="Command"
-              className="w-full border-b border-white/10 bg-transparent px-[18px] py-4 font-mono text-sm text-[#f2f2ee] outline-none placeholder:text-faint"
+              className="w-full border-b border-white/10 bg-transparent px-[18px] py-4 text-sm text-zinc-100 outline-none placeholder:text-zinc-500"
             />
             <div className="max-h-[320px] overflow-y-auto p-1.5">
               {filtered.length === 0 ? (
-                <div className="p-4 text-[13px] text-faint">No matches.</div>
+                <div className="p-4 text-[13px] text-zinc-500">No matches.</div>
               ) : (
                 filtered.map((c, i) => (
                   <div
                     key={c.label}
                     onMouseMove={() => setActive(i)}
                     onClick={() => runIdx(i)}
-                    className={`flex cursor-pointer items-center justify-between gap-3 rounded-md px-3 py-2.5 text-[13px] ${
-                      i === active ? "bg-accent/10" : ""
+                    className={`flex cursor-pointer items-center justify-between gap-3 rounded-md px-3 py-2.5 text-sm ${
+                      i === active ? "bg-white/[0.06]" : ""
                     }`}
                   >
-                    <span className={i === active ? "text-accent" : "text-[#f2f2ee]"}>
+                    <span className={i === active ? "text-zinc-100" : "text-zinc-300"}>
                       {c.label}
                     </span>
-                    <span className={`font-mono text-[11px] ${i === active ? "text-accent" : "text-faint"}`}>
+                    <span className={`font-mono text-[11px] ${i === active ? "text-zinc-400" : "text-zinc-600"}`}>
                       {c.hint}
                     </span>
                   </div>

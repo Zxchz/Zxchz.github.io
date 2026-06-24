@@ -173,9 +173,14 @@ export function Aurora({
     const mesh = new Mesh(gl, { geometry, program });
     ctn.appendChild(gl.canvas);
 
+    let lastW = 0;
+    let lastH = 0;
     const resize = () => {
       const w = ctn.offsetWidth;
       const h = ctn.offsetHeight;
+      if (!w || !h || (w === lastW && h === lastH)) return;
+      lastW = w;
+      lastH = h;
       renderer.setSize(w, h);
       program.uniforms.uResolution.value = [w, h];
     };
@@ -192,6 +197,7 @@ export function Aurora({
       if (!last) last = t;
       elapsed += t - last;
       last = t;
+      resize(); // keep the buffer matched to the element — no aspect distortion
       program.uniforms.uTime.value = elapsed * 0.001 * speed;
       renderer.render({ scene: mesh });
       raf = requestAnimationFrame(frame);

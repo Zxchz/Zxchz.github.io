@@ -1,54 +1,54 @@
 "use client";
 
+import { type RefObject } from "react";
 import { StackCard, CardInner, Item } from "@/components/StackCard";
 import { experience } from "@/lib/data";
 
-export function Experience() {
+const LIGHT = "rgba(44,46,55,0.30)";
+
+type StackProps = {
+  cardRef: RefObject<HTMLElement | null>;
+  nextRef: RefObject<HTMLElement | null>;
+};
+
+export function Experience({ cardRef, nextRef }: StackProps) {
   return (
-    <StackCard
-      id="work"
-      z={20}
-      bg="bg-zinc-950 bg-[radial-gradient(100%_60%_at_50%_0%,rgba(30,41,59,0.35),transparent_60%)]"
-    >
+    <StackCard id="work" z={12} bg="bg-[#0a0a0c]" light={LIGHT} cardRef={cardRef} nextRef={nextRef}>
       <CardInner index="02" label="Experience">
         <ul className="flex flex-col">
           {experience.map((r, i) => (
             <Item
               as="li"
               key={r.role + i}
-              className={`border-b border-white/[0.09] py-7 first:pt-0 last:border-b-0 ${
-                r.minimal ? "opacity-60" : ""
+              className={`border-b border-white/[0.08] py-7 first:pt-0 last:border-b-0 ${
+                r.minimal ? "opacity-70" : ""
               }`}
             >
               <div className="flex items-baseline justify-between gap-4">
                 <h3
-                  className={`font-semibold tracking-[-0.03em] ${
-                    r.minimal
-                      ? "text-[clamp(1rem,2vw,1.15rem)]"
-                      : "text-[clamp(1.25rem,2.6vw,1.7rem)]"
+                  className={`font-semibold tracking-[-0.02em] text-zinc-100 ${
+                    r.minimal ? "text-base" : "text-[clamp(1.2rem,2.4vw,1.6rem)]"
                   }`}
                 >
                   {r.role}
                   {r.aside && (
-                    <span className="ml-2 text-[0.78rem] font-normal italic tracking-normal text-faint">
+                    <span className="ml-2 text-[0.8rem] font-normal italic text-zinc-500">
                       {r.aside}
                     </span>
                   )}
                 </h3>
-                <span className="flex-none whitespace-nowrap font-mono text-xs text-faint">
+                <span className="flex-none whitespace-nowrap font-mono text-xs text-zinc-500">
                   {r.date}
                 </span>
               </div>
-              <p className="mt-2.5 font-mono text-xs uppercase tracking-[0.03em] text-muted">
-                {r.org}
-              </p>
+              <p className="mt-2 text-sm text-zinc-500">{r.org}</p>
               {r.desc && (
-                <p className="mt-3 max-w-[60ch] text-muted">{r.desc}</p>
+                <p className="mt-3 max-w-prose leading-relaxed text-zinc-400">{r.desc}</p>
               )}
               {r.extra && (
-                <p className="mt-3 font-mono text-xs tracking-[0.02em] text-faint">
-                  <span className="mr-2 text-muted">{r.extraLabel}</span>
-                  {r.extra}
+                <p className="mt-3 text-xs text-zinc-500">
+                  <span className="mr-2">{r.extraLabel}</span>
+                  <span className="font-mono text-zinc-400">{r.extra}</span>
                 </p>
               )}
             </Item>
